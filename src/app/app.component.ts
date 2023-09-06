@@ -19,11 +19,12 @@ export class AppComponent {
   getPosts(){
     this.firebase.getDocuments("Posts").then((res)=>{console.log(res)})
   }
-  
   createPost(){
     this.firebase.createDocument("Posts",{title:"Quarto Post",content:"conteudo", author:"LeroGenerator", datehour: Timestamp.fromDate(new Date()), likes: 10})
   }
   updatePost(){
     this.firebase.updateDocument("Posts",this.postID,{content:"A lição do rato",likes:100})
   }
+
+
 }

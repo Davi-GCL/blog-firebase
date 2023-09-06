@@ -4,6 +4,8 @@ import { getAnalytics } from 'firebase/analytics';
 import { getDatabase, ref, onValue, set } from "firebase/database";
 import { getFirestore, doc, setDoc, getDocs, addDoc, collection, updateDoc, serverTimestamp } from "firebase/firestore"
 
+import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
+
 
 import {
   getAuth,
@@ -41,6 +43,7 @@ export class FirebaseService {
   auth = getAuth(this.app);
 
   firestoreDB = getFirestore(this.app);
+  storage = getStorage()
 
   //Variaveis com dados do usuario:
 
@@ -50,7 +53,6 @@ export class FirebaseService {
   //------------------------------
 
   async myloginWithGoogle():Promise<any> {
-    let setUser = {}
     await signInWithPopup(this.auth, this.provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
@@ -97,33 +99,33 @@ export class FirebaseService {
       // An error happened.
       console.log(error);
     });
-}
+  }
 
-sendToRealtimeDatabase() { }
+  sendToRealtimeDatabase() { }
 
-activateUpdate(setState:any) {
-  const db = getDatabase(this.app);
-  const starCountRef = ref(db, '/');
-  onValue(starCountRef, (snapshot) => {
-    const data = snapshot.val();
-    
-    const dataArray = Object.keys(data).map(key => data[key]);
-    console.log(dataArray);
-    setState(dataArray);
+  activateUpdate(setState:any) {
+    const db = getDatabase(this.app);
+    const starCountRef = ref(db, '/');
+    onValue(starCountRef, (snapshot) => {
+      const data = snapshot.val();
+      
+      const dataArray = Object.keys(data).map(key => data[key]);
+      console.log(dataArray);
+      setState(dataArray);
 
-  });
-}
+    });
+  }
 
-writeUserData(texto:string) {
-  const db = getDatabase(this.app);
-  let aux = Date.now();
-  set(ref(db, '/' + aux), {
-    text: texto,
-    user: this.userName,
-    photo: this.userPhoto,
-    time: Date.now()
-  });
-}
+  writeUserData(texto:string) {
+    const db = getDatabase(this.app);
+    let aux = Date.now();
+    set(ref(db, '/' + aux), {
+      text: texto,
+      user: this.userName,
+      photo: this.userPhoto,
+      time: Date.now()
+    });
+  }
 
 //Metodos do Firestore database: 
 
@@ -148,4 +150,16 @@ writeUserData(texto:string) {
     await updateDoc(docRef, {...updateObj , datehour: serverTimestamp()});
   }
 
+
+//Metodos do Firebase Storage: 
+
+  async uploadToStorage(path:string ,file:File){
+    path = path + '/' + file.name
+    const imagesRef = storageRef(this.storage, path);
+
+    // 'file' comes from the Blob or File API
+    uploadBytes(imagesRef, file).then((snapshot) => {
+      console.log(snapshot.metadata.fullPath);
+    });
+  }
 }
