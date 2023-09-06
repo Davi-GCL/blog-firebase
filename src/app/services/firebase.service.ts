@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
+import { getDatabase, ref, onValue, set } from "firebase/database";
+import { getFirestore, doc, setDoc, getDocs, addDoc, collection, updateDoc, serverTimestamp } from "firebase/firestore"
+
 
 import {
   getAuth,
@@ -9,7 +12,6 @@ import {
   signOut,
 } from 'firebase/auth';
 
-import { getDatabase, ref, onValue, set } from "firebase/database";
 
 
 @Injectable({
@@ -38,13 +40,18 @@ export class FirebaseService {
   provider = new GoogleAuthProvider();
   auth = getAuth(this.app);
 
+  firestoreDB = getFirestore(this.app);
+
+  //Variaveis com dados do usuario:
+
   userId:any;
   userName:any;
   userPhoto:any;
+  //------------------------------
 
-  async myloginWithGoogle(userNome:string):Promise<any> {
+  async myloginWithGoogle():Promise<any> {
     let setUser = {}
-  await  signInWithPopup(this.auth, this.provider)
+    await signInWithPopup(this.auth, this.provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -56,7 +63,6 @@ export class FirebaseService {
         this.userId = user.uid;
         this.userName = user.displayName;
         this.userPhoto = user.photoURL;
-        userNome = user.displayName?user.displayName: '';
         console.log(user.displayName);
 
         return {
@@ -118,4 +124,28 @@ writeUserData(texto:string) {
     time: Date.now()
   });
 }
+
+//Metodos do Firestore database: 
+
+  async getDocuments(collectionName:string){
+    const collectionRef = collection(this.firestoreDB, collectionName);
+    let docArray = await getDocs(collectionRef);
+
+    //Puxa e retorna os campos presentes nesse documento
+    return docArray.docs.map((doc)=>({ ...doc.data(), id: doc.id}));
+  }
+
+  async createDocument(collectionName:string, data:any){
+    //Cria um documento (registro/linha) na coleção(tabela) informada
+    const docRef = await addDoc(collection(this.firestoreDB, collectionName), data);
+    console.log("Document written with ID: ", docRef.id);
+  }
+
+  async updateDocument(collectionName:string , docName:string, updateObj:any){
+    const docRef = doc(this.firestoreDB, collectionName, docName);
+
+    //Atualiza apenas os campos passados
+    await updateDoc(docRef, {...updateObj , datehour: serverTimestamp()});
+  }
+
 }

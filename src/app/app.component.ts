@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 import { FirebaseService } from './services/firebase.service';
+import { Timestamp } from 'firebase/firestore';
 
 @Component({
   selector: 'app-root',
@@ -9,17 +10,20 @@ import { FirebaseService } from './services/firebase.service';
 })
 export class AppComponent {
   title = 'blog-firebase';
-  userName:string = 'Seu nome';
+  postID = "BXyPfvQmfGoI3zBn7AE7";
+  
+  constructor(public firebase: FirebaseService){
+    this.getPosts()
+  }
 
-  constructor(public auth: FirebaseService){}
-
-  async loginGoogle(){
-    try {
-      await this.auth.myloginWithGoogle(this.userName).then((res)=>console.log(res.nome));
-      // this.userName = user.nome as string;
-      console.log("seu nome: "+ this.auth.userName);
-    } catch (error) {
-      console.log(error)
-    }
+  getPosts(){
+    this.firebase.getDocuments("Posts").then((res)=>{console.log(res)})
+  }
+  
+  createPost(){
+    this.firebase.createDocument("Posts",{title:"Quarto Post",content:"conteudo", author:"LeroGenerator", datehour: Timestamp.fromDate(new Date()), likes: 10})
+  }
+  updatePost(){
+    this.firebase.updateDocument("Posts",this.postID,{content:"A lição do rato",likes:100})
   }
 }
