@@ -4,7 +4,7 @@ import { getAnalytics } from 'firebase/analytics';
 import { getDatabase, ref, onValue, set } from "firebase/database";
 import { getFirestore, doc, setDoc, getDocs, addDoc, collection, updateDoc, serverTimestamp } from "firebase/firestore"
 
-import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
+import { getDownloadURL, getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
 
 
 import {
@@ -158,8 +158,15 @@ export class FirebaseService {
     const imagesRef = storageRef(this.storage, path);
 
     // 'file' comes from the Blob or File API
-    uploadBytes(imagesRef, file).then((snapshot) => {
-      console.log(snapshot.metadata.fullPath);
-    });
+    // uploadBytes(imagesRef, file).then((snapshot) => {
+    //   console.log(snapshot.metadata.fullPath);
+    // });
+    
+    const upload = await uploadBytes(imagesRef, file);
+    // return upload.ref.fullPath;
+
+    return await getDownloadURL(imagesRef)
+    
+
   }
 }
