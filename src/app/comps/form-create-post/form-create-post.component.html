@@ -1,0 +1,13 @@
+<form action="" [formGroup]="formPost" (ngSubmit)="handleSubmit($event)" #formDir="ngForm">
+    <input type="text" formControlName="title" name="title" id="inputTitle" placeholder="title">
+    <input type="text" formControlName="text" name="text" id="inputText" placeholder="text">
+    <!-- <input type="text" formControlName="thumbnailUrl" name="thumbnailUrl" id="inputThumbnail" placeholder="thumbnail">
+    <input type="text" formControlName="bannerUrl" name="banner" id="inputBanner" placeholder="banner">
+    <input type="text" formControlName="likes" name="likes" id="inputLikes" placeholder="likes"> -->
+
+    <button type="submit">Publicar</button>
+    <small *ngIf="title.invalid && formDir.submitted">Um titulo é obrigatorio</small>
+</form>
+
+<app-btn-upload-image></app-btn-upload-image>
+
