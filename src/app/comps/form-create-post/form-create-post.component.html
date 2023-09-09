@@ -9,5 +9,6 @@
     <small *ngIf="title.invalid && formDir.submitted">Um titulo é obrigatorio</small>
 </form>
 
-<app-btn-upload-image></app-btn-upload-image>
+<app-btn-upload-image [imageUrl]="Url"></app-btn-upload-image>
+<p>{{Url}}</p>
 

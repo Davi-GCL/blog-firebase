@@ -1,10 +1,10 @@
-<form (submit)="onSubmit($event,'banners')">
+<form #formBanner (submit)="onSubmit($event,'banners')">
     <h5>Submit Banner</h5>
     <input type="file" (input)="onFileSelected($event)">
     <button type="submit">Upload</button>
 </form>
 
-<form (submit)="onSubmit($event,'thumbnails')">
+<form #formThumbnail (submit)="onSubmit($event,'thumbnails')" id="form-thumbnail">
     <h5>Submit thumbnail</h5>
     <input type="file" (input)="onFileSelected($event)">
     <button type="submit">Upload</button>

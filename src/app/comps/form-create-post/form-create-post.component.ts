@@ -1,8 +1,9 @@
-import { Component , OnInit } from '@angular/core';
+import { Component , OnInit , ViewChild} from '@angular/core';
 import { FormControl , FormBuilder, FormGroup , Validators} from '@angular/forms';
 
 import { Post } from 'src/app/model/post';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import { BtnUploadImageComponent } from '../btn-upload-image/btn-upload-image.component';
 
 @Component({
   selector: 'app-form-create-post',
@@ -10,9 +11,11 @@ import { FirebaseService } from 'src/app/services/firebase.service';
   styleUrls: ['./form-create-post.component.css']
 })
 export class FormCreatePostComponent implements OnInit{
-  //O ! Sinaliza que o formulario será inicializado depois de sua declaração 
+  //O ! Sinaliza que o formulario será inicializado depois de sua declaração
+  Url:any; 
   formPost!: FormGroup;
-  
+  @ViewChild(BtnUploadImageComponent) uploadImages!: BtnUploadImageComponent;
+
   constructor(private formBuilder: FormBuilder, private firebase: FirebaseService){}
 
   ngOnInit(): void {
@@ -32,11 +35,14 @@ export class FormCreatePostComponent implements OnInit{
       title: new FormControl(newPost.title, [Validators.required]),
       text: new FormControl(newPost.text, [Validators.required]),
     });
+    
   }
 
   handleSubmit(event:any) {
-    // event.preventDefault();
+    event.preventDefault();
     // aqui você pode implementar a logica para fazer seu formulário salvar
+    this.uploadImages.selectedFile;
+
     let newPost:Post = {
       title: this.formPost.value.title,
       text: this.formPost.value.text,
