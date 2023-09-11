@@ -11,7 +11,8 @@ import { InputImageComponent } from '../input-image/input-image.component';
   styleUrls: ['./form-create-post.component.css']
 })
 export class FormCreatePostComponent implements OnInit{
-  //O ! Sinaliza que o formulario será inicializado depois de sua declaração 
+  //O ! Sinaliza que o formulario será inicializado depois de sua declaração
+  Url:any; 
   formPost!: FormGroup;
 
   @ViewChild('uploadThumb') uploadThumbnail!: InputImageComponent;
@@ -36,6 +37,7 @@ export class FormCreatePostComponent implements OnInit{
       title: new FormControl(newPost.title, [Validators.required]),
       text: new FormControl(newPost.text, [Validators.required]),
     });
+    
   }
 
   async handleSubmit(event:any) {
