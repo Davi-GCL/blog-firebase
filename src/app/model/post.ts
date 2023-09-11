@@ -1,8 +1,12 @@
+import { IAuthor } from "./iauthor"
+
 export class Post {
+    id?:string
     title:string = ''
     text:string = ''
     thumbnailUrl:string = ''
     bannerUrl:string = ''
-    author:any = {userId:'',userName:'',userPhoto:''}
+    author:IAuthor = {userId:'',userName:'',userPhoto:''}
     likes:number = 0
+    datehour!:any 
 }

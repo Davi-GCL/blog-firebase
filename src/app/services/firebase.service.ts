@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { getDatabase, ref, onValue, set } from "firebase/database";
-import { getFirestore, doc, setDoc, getDocs, addDoc, collection, updateDoc, serverTimestamp } from "firebase/firestore"
+import { getFirestore, doc, setDoc, getDocs, addDoc, collection, updateDoc, serverTimestamp, query, orderBy, where, getDoc } from "firebase/firestore"
 
 import { getDownloadURL, getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
 
@@ -13,6 +13,7 @@ import {
   GoogleAuthProvider,
   signOut,
 } from 'firebase/auth';
+import { IAuthor } from '../model/iauthor';
 
 
 
@@ -46,10 +47,27 @@ export class FirebaseService {
   storage = getStorage()
 
   //Variaveis com dados do usuario:
+  
+  _user: any = {
+    userId: localStorage.getItem('userId')? localStorage.getItem('userId') : '',
+    userName: localStorage.getItem('userName')? localStorage.getItem('userName') : '',
+    userPhoto: localStorage.getItem('userPhoto')? localStorage.getItem('userPhoto') : ''
+  }
+  
+  public get user() {
+    return this._user;
+  }
 
-  userId:any;
-  userName:any;
-  userPhoto:any;
+  public set user(value:IAuthor){
+    this._user.userId = value.userId;
+    this._user.userName = value.userName;
+    this._user.userPhoto = value.userPhoto;
+
+    localStorage.setItem('userId',value.userId);
+    localStorage.setItem('userName',value.userName);
+    localStorage.setItem('userPhoto',value.userPhoto);
+  }
+  
   //------------------------------
 
   async myloginWithGoogle():Promise<any> {
@@ -61,10 +79,13 @@ export class FirebaseService {
           const token = credential.accessToken;
         }else{ throw new Error("credential null")}
         // The signed-in user info.
+
         const user = result.user;
-        this.userId = user.uid;
-        this.userName = user.displayName;
-        this.userPhoto = user.photoURL;
+
+        if(user.displayName == null || user.photoURL == null){throw new Error}
+
+        this.user = {userId: user.uid, userName: user.displayName, userPhoto: user.photoURL}
+
         console.log(user.displayName);
 
         return {
@@ -101,31 +122,31 @@ export class FirebaseService {
     });
   }
 
-  sendToRealtimeDatabase() { }
+  // sendToRealtimeDatabase() { }
 
-  activateUpdate(setState:any) {
-    const db = getDatabase(this.app);
-    const starCountRef = ref(db, '/');
-    onValue(starCountRef, (snapshot) => {
-      const data = snapshot.val();
+  // activateUpdate(setState:any) {
+  //   const db = getDatabase(this.app);
+  //   const starCountRef = ref(db, '/');
+  //   onValue(starCountRef, (snapshot) => {
+  //     const data = snapshot.val();
       
-      const dataArray = Object.keys(data).map(key => data[key]);
-      console.log(dataArray);
-      setState(dataArray);
+  //     const dataArray = Object.keys(data).map(key => data[key]);
+  //     console.log(dataArray);
+  //     setState(dataArray);
 
-    });
-  }
+  //   });
+  // }
 
-  writeUserData(texto:string) {
-    const db = getDatabase(this.app);
-    let aux = Date.now();
-    set(ref(db, '/' + aux), {
-      text: texto,
-      user: this.userName,
-      photo: this.userPhoto,
-      time: Date.now()
-    });
-  }
+  // writeUserData(texto:string) {
+  //   const db = getDatabase(this.app);
+  //   let aux = Date.now();
+  //   set(ref(db, '/' + aux), {
+  //     text: texto,
+  //     user: this.user.userName,
+  //     photo: this.user.userPhoto,
+  //     time: Date.now()
+  //   });
+  // }
 
 //Metodos do Firestore database: 
 
@@ -135,6 +156,12 @@ export class FirebaseService {
 
     //Puxa e retorna os campos presentes nesse documento
     return docArray.docs.map((doc)=>({ ...doc.data(), id: doc.id}));
+  }
+
+  async getDocument(collectionName:string, docId:string){
+    const collectionRef = collection(this.firestoreDB, collectionName);
+    
+    return (await getDoc(doc(this.firestoreDB, collectionName, docId))).data();
   }
 
   async createDocument(collectionName:string, data:any){
@@ -154,7 +181,9 @@ export class FirebaseService {
 //Metodos do Firebase Storage: 
 
   async uploadToStorage(path:string ,file:File){
-    path = path + '/' + file.name
+    //Concatena o nome do arquivo com os milisegundos atuais para que o nome nunca seja repetido
+    let fileName = file.name + Date.now().toString();
+    path = path + '/' + fileName;
     const imagesRef = storageRef(this.storage, path);
 
     // 'file' comes from the Blob or File API
@@ -165,7 +194,7 @@ export class FirebaseService {
     const upload = await uploadBytes(imagesRef, file);
     // return upload.ref.fullPath;
 
-    return await getDownloadURL(imagesRef)
+    return await getDownloadURL(imagesRef);
     
 
   }

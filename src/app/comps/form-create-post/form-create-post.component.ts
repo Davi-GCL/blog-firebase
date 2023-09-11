@@ -1,8 +1,9 @@
-import { Component , OnInit } from '@angular/core';
+import { AfterViewInit, Component , ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl , FormBuilder, FormGroup , Validators} from '@angular/forms';
 
 import { Post } from 'src/app/model/post';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import { InputImageComponent } from '../input-image/input-image.component';
 
 @Component({
   selector: 'app-form-create-post',
@@ -12,6 +13,9 @@ import { FirebaseService } from 'src/app/services/firebase.service';
 export class FormCreatePostComponent implements OnInit{
   //O ! Sinaliza que o formulario será inicializado depois de sua declaração 
   formPost!: FormGroup;
+
+  @ViewChild('uploadThumb') uploadThumbnail!: InputImageComponent;
+  @ViewChild('uploadBanner') uploadBanner!: InputImageComponent;
   
   constructor(private formBuilder: FormBuilder, private firebase: FirebaseService){}
 
@@ -34,22 +38,37 @@ export class FormCreatePostComponent implements OnInit{
     });
   }
 
-  handleSubmit(event:any) {
-    // event.preventDefault();
-    // aqui você pode implementar a logica para fazer seu formulário salvar
-    let newPost:Post = {
-      title: this.formPost.value.title,
-      text: this.formPost.value.text,
-      thumbnailUrl:'',
-      bannerUrl:'',
-      author: {userId:'',userName:'',userPhoto:''},
-      likes: 0
+  async handleSubmit(event:any) {
+    event.preventDefault();
+    
+    let userId:string = localStorage.getItem('userId')|| '';
+    let userName:string = localStorage.getItem('userName')|| '';
+    let userPhoto:string = localStorage.getItem('userPhoto') || '';   
+
+    if(userId == '' ){
+      alert('Você deve estar cadastrado para publicar!')
+      throw new Error('Proibido enviar sem login!')
     }
-    
-    //this.firebase.createDocument("Posts",{title:"Quarto Post",content:"conteudo", author:"LeroGenerator", datehour: new Date(), likes: 10})
-    console.log(this.formPost.value);
-    
-    // Usar o método reset para limpar os controles na tela
-    this.formPost.reset(new Post());
+    else{
+      
+      let thumbnailURL = await this.uploadThumbnail.onSubmit()
+      let bannerURL =  await this.uploadBanner.onSubmit()
+      // aqui você pode implementar a logica para fazer seu formulário salvar
+      let newPost:Post = {
+        title: this.formPost.value.title,
+        text: this.formPost.value.text,
+        thumbnailUrl: thumbnailURL,
+        bannerUrl: bannerURL,
+        author: {userId, userName, userPhoto},
+        likes: 0,
+        datehour: new Date()
+      }
+      
+      this.firebase.createDocument("Posts",newPost);
+      console.log(newPost);
+      
+      // Usar o método reset para limpar os controles na tela
+      this.formPost.reset(new Post());
+    }
   }
 }

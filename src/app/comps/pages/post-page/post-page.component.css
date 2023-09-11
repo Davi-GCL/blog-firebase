@@ -1,0 +1,9 @@
+.comment-avatar{
+    height: 3rem;
+}
+
+.comment-card{
+    max-width: 80%;
+    width: fit-content;
+    box-sizing: border-box;
+}

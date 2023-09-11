@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 
 import { FirebaseService } from './services/firebase.service';
@@ -11,32 +11,29 @@ import { Post } from './model/post';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'blog-firebase';
-  postID = "BXyPfvQmfGoI3zBn7AE7";
+  postID = "";
   
-  constructor(public firebase: FirebaseService){
-    this.getPosts()
+  constructor(public firebase: FirebaseService){}
+  ngOnInit(): void {
+      this.getPosts()
+      this.getComents("4iKpobmQ1a9Dpp8bmFQb")
   }
 
   getPosts(){
     this.firebase.getDocuments("Posts").then((res)=>{console.log(res)})
   }
-  createPost(){
-    let newPost:Post = {
-      title:'',
-      text:'',
-      thumbnailUrl:'',
-      bannerUrl:'',
-      author: {userId:'',userName:'',userPhoto:''},
-      likes: 0
-    }
-    
-    this.firebase.createDocument("Posts",{title:"Quarto Post",content:"conteudo", author:"LeroGenerator", datehour: Timestamp.fromDate(new Date()), likes: 10})
-  }
+
+  
   updatePost(){
     this.firebase.updateDocument("Posts",this.postID,{content:"A lição do rato",likes:100})
   }
 
+
+  getComents(postId:string){
+    console.log("Comentarios do post:"+ postId)
+    this.firebase.getDocuments(`Posts/${postId}/coments`).then((res)=>{console.log(res)})
+  }
 
 }

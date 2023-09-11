@@ -1,2 +1,2 @@
-<h4>{{userName}}</h4>
-<button (click)="loginGoogle()">Login google</button>
+<button class="btn btn-primary" *ngIf="!userId" (click)="loginGoogle()">Login google</button>
+<button class="btn btn-primary" *ngIf="userId" (click)="logoutGoogle()">Logout</button>

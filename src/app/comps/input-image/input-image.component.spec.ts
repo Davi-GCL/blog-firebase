@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BtnUploadImageComponent } from './btn-upload-image.component';
+import { BtnUploadImageComponent } from './input-image.component';
 
 describe('BtnUploadImageComponent', () => {
   let component: BtnUploadImageComponent;
