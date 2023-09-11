@@ -20,7 +20,12 @@ export class HomePageComponent implements OnInit{
   }
 
   getPosts(){
-    this.firebase.getDocuments("Posts").then((res)=>{console.log(res); this.postList = <Array<Post>>res})
+    this.firebase.getDocuments("Posts").then((res)=>{
+      //Transforma o timestamp do formato firestore(presente no atributo datehour) para o datetime no formato string entendivel
+      let aux = res as Array<Post>;
+      this.postList = aux.map((p:any)=>{return {...p, datehour:new Date(p['datehour']['seconds']*1000).toLocaleString()}});
+      
+      console.log(this.postList)})
   }
 
   buildPreview(array:Array<string>):string{

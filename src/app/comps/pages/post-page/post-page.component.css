@@ -7,3 +7,11 @@
     width: fit-content;
     box-sizing: border-box;
 }
+
+#post{
+    max-width: 900px;
+}
+
+#post-text{
+    padding-inline: 2.25rem !important;
+}

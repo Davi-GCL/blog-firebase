@@ -1,43 +1,53 @@
 <div class="container mt-5 p-5" style="min-height: 98vh;">
-    <div class="container border" *ngIf="post">
-        <img src={{post.bannerUrl}} alt="">
-        <h2>{{post.title}}</h2>
-        <hr>
-        <small>{{post.datehour}}</small>
-        <p>{{post.text}}</p>
-    </div>
-    <div class="container comments">
-        <form [formGroup]="formComment" *ngIf="this.isSigned()">
-            <label for="inputComment">Escreva um comentário</label>
-            <textarea type="text" class="formControl" name="inputComment" formControlName="inputComment"></textarea>
-            <button (click)="uploadComment()">Enviar</button>
-        </form>
-        <div class="comment-warn" *ngIf="!this.isSigned()">
-            <h5 class="text-center text-secondary">Faça login para comentar</h5>
+    <div class="card" id="post" *ngIf="post">
+        <!-- <img src={{post.bannerUrl}} alt=""> -->
+        <div class="card-header d-flex justify-content-between">
+            <p class="fw-medium m-0 ms-2"><a href="">posts</a> / <a href="">lorem</a> / ...</p>
+            <p class="fw-regular m-0 ms-2">{{post.datehour}}</p>
         </div>
-        <div class="card comment-card mb-4" *ngFor="let c of commentsList">
-            <!-- <div class="card-header post-header d-flex align-items-center">
-                <img src={{c.author.userPhoto}} alt="user photo" class="img-fluid comment-avatar rounded-2">
-                <span class='text-start ms-3'>
-                    <h5 class="mb-0 pb-0">{{c.author.userName}}</h5>
-                    
-                </span>
-            </div> -->
-            <div class="card-body d-flex align-items-start">
-                <img src={{c.author.userPhoto}} alt="user photo" class="img-fluid comment-avatar rounded-2">
-                <div class='text-start ms-3'>
-                    <span class="d-flex align-items-baseline justify-content-between">
-                        <h5 class="mb-0 pb-1 me-3">{{c.author.userName}}</h5>
-                        <small class="text-body-secondary">{{c.datehour}}</small>
-                    </span>
-                    <hr class="my-1 py-1">
-                    <p class="card-text">{{c.text}}</p>
-                </div>
-            </div>
-            <!-- <div class="card-footer d-flex justify-content-end">
-                <p class="card-text align-self-end"><small class="text-body-secondary">{{c.datehour}}</small></p>
-            </div> -->
-            
+        <div class="card-body" id="post-text">
+            <h2>{{post.title}}</h2>
+            <hr>
+            <small class="">{{post.datehour}}</small>
+            <p>{{post.text}}</p>
         </div>
+        
     </div>
+
 </div>
+
+ <!-- ------------- Seção dos comentarios ------------ -->
+ <section class="container comments" id="section-comments">
+    <form [formGroup]="formComment" *ngIf="this.isSigned()">
+        <label for="inputComment">Escreva um comentário</label>
+        <textarea type="text" class="formControl" name="inputComment" formControlName="inputComment"></textarea>
+        <button (click)="uploadComment()">Enviar</button>
+    </form>
+    <div class="comment-warn" *ngIf="!this.isSigned()">
+        <h5 class="text-center text-secondary">Faça login para comentar</h5>
+    </div>
+    <div class="card comment-card mb-4" *ngFor="let c of commentsList">
+        <!-- <div class="card-header post-header d-flex align-items-center">
+            <img src={{c.author.userPhoto}} alt="user photo" class="img-fluid comment-avatar rounded-2">
+            <span class='text-start ms-3'>
+                <h5 class="mb-0 pb-0">{{c.author.userName}}</h5>
+                
+            </span>
+        </div> -->
+        <div class="card-body d-flex align-items-start">
+            <img src={{c.author.userPhoto}} alt="user photo" class="img-fluid comment-avatar rounded-2">
+            <div class='text-start ms-3'>
+                <span class="d-flex align-items-baseline justify-content-between">
+                    <h5 class="mb-0 pb-1 me-3">{{c.author.userName}}</h5>
+                    <small class="text-body-secondary">{{c.datehour}}</small>
+                </span>
+                <hr class="my-1 py-1">
+                <p class="card-text">{{c.text}}</p>
+            </div>
+        </div>
+        <!-- <div class="card-footer d-flex justify-content-end">
+            <p class="card-text align-self-end"><small class="text-body-secondary">{{c.datehour}}</small></p>
+        </div> -->
+        
+    </div>
+</section>
