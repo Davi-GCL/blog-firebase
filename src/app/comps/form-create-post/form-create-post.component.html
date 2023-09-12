@@ -6,11 +6,14 @@
     <input type="text" formControlName="bannerUrl" name="banner" id="inputBanner" placeholder="banner">
     <input type="text" formControlName="likes" name="likes" id="inputLikes" placeholder="likes"> -->
 
-    <app-input-image #uploadThumb [destinationFolder]="'thumbnails'"></app-input-image>
+    <!-- <app-input-image #uploadThumb [destinationFolder]="'thumbnails'"></app-input-image> -->
     <app-input-image #uploadBanner [destinationFolder]="'banners'"></app-input-image>
 
+    <input type="text" class="form-control mb-3" formControlName="tag" name="tag" id="inputTag" placeholder="tag" style="max-width: 500px;">
+
     <button type="submit" class="btn btn-primary">Publicar</button>
-    <small *ngIf="title.invalid && formDir.touched">Um titulo é obrigatorio</small>
+    <small class="ms-3 text-danger" *ngIf="title.invalid && formDir.touched">O titulo é obrigatório</small>
+    <small class="ms-3 text-danger" *ngIf="text.invalid && formDir.touched">O texto é obrigatório</small>
 </form>
 
 

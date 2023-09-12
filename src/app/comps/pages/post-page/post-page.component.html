@@ -1,8 +1,8 @@
 <div class="container mt-5 p-5 d-grid justify-content-center" style="min-height: 70vh;">
     <div class="card" id="post" *ngIf="post">
-        <!-- <img src={{post.bannerUrl}} alt=""> -->
+        <img src={{post.bannerUrl}} alt="">
         <div class="card-header d-flex justify-content-between">
-            <p class="fw-medium m-0 ms-2"><a href="">posts</a> / <a href="">lorem</a> / ...</p>
+            <p class="fw-medium m-0 ms-2"><a [routerLink]="['/']" >posts</a> / <a href="">{{post.tag}}</a> / ...</p>
             <div>
                 <small class="me-2 text-body-secondary">{{post.datehour}}</small> <a [routerLink]="['/edit-post',this.id]" *ngIf="isAuthor()"><i class="bi bi-pencil-square text-primary"></i></a>
             </div>
@@ -24,10 +24,10 @@
 
     <h5 class="text-center text-secondary">Comentários ({{commentsList.length}}):</h5>
 
-    <form [formGroup]="formComment" *ngIf="this.isSigned()">
-        <label for="inputComment">Escreva um comentário</label>
-        <textarea type="text" class="formControl" name="inputComment" formControlName="inputComment"></textarea>
-        <button (click)="uploadComment()">Enviar</button>
+    <form class="form-comment" [formGroup]="formComment" *ngIf="this.isSigned()">
+        <!-- <label for="inputComment" class="form-label">Escreva um comentário</label> -->
+        <textarea type="text" class="form-control" name="inputComment" placeholder="Escreva seu comentário" formControlName="inputComment" style="height: 87px;width: 66.5vw;"></textarea>
+        <button type="submit" class="btn btn-primary mt-2" (click)="uploadComment()">Enviar</button>
     </form>
 
     <div class="comment-warn" *ngIf="!this.isSigned()">

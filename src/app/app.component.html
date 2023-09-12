@@ -2,6 +2,57 @@
 <br>
 <router-outlet></router-outlet>
 
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Autenticação</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body d-grid align-items-center">
+          <form action="" class="w-50 d-grid mx-auto mb-4" *ngIf="onLogin" [formGroup]="formLogin">
+            <h4>Login:</h4>
+            <div class="mb-3">
+                <label for="email" class="mb-1">Email:</label>
+                <input type="text" class="form-control" name="email" placeholder="Email"
+                formControlName="email">
+            </div>
+            <div class="mb-1">            
+                <label for="senha" class="mb-1">Senha:</label>
+                <input type="password" class="form-control" name="senha" placeholder="Senha"
+                formControlName="senha">
+            </div>
+            <a class="mx-auto mb-3 p-0 align-self-start" role="button" (click)="onLogin=false">Não tem cadastro?</a>
+            <button class="btn btn-primary justify-content-end">Login</button>
+          </form>
+
+          <form action="" class="w-50 d-grid mx-auto mb-4" *ngIf="!onLogin" [formGroup]="formRegister">
+            <h4>Cadastrar-se:</h4>
+            <div class="mb-3">
+                <label for="email" class="mb-1">Email:</label>
+                <input type="text" class="form-control" name="email" placeholder="Email"
+                formControlName="email">
+            </div>
+            <div class="mb-1">            
+                <label for="senha" class="mb-1">Senha:</label>
+                <input type="password" class="form-control" name="senha" placeholder="Senha"
+                formControlName="senha">
+            </div>
+            <a class="mx-auto mb-3 p-0 align-self-start" role="button" (click)="onLogin=true">Já tem cadastro?</a>
+            <button class="btn btn-primary justify-content-end" (click)="registerEmail()">Cadastrar</button>
+          </form>
+
+          <button class="btn btn-outline-success mx-auto" (click)="loginGoogle()">Faça Login com google</button>
+
+        </div>
+        <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+          <!-- <button type="button" class="btn btn-primary">Understood</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
 <footer>
     footer
     <app-login-area></app-login-area>

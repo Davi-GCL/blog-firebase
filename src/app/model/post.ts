@@ -9,4 +9,5 @@ export class Post {
     author:IAuthor = {userId:'',userName:'',userPhoto:''}
     likes:number = 0
     datehour!:any | string
+    tag?:any = ''
 }

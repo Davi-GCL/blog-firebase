@@ -38,6 +38,7 @@ export class FormCreatePostComponent implements OnInit{
     this.formPost = this.formBuilder.group({
       title: new FormControl(newPost.title, [Validators.required]),
       text: new FormControl(newPost.text, [Validators.required]),
+      tag: new FormControl(newPost.tag)
     });
     
   }
@@ -58,12 +59,24 @@ export class FormCreatePostComponent implements OnInit{
       let thumbnailURL = await this.uploadThumbnail.onSubmit()
       let bannerURL =  await this.uploadBanner.onSubmit()
 
+      //Trecho que só será executado se o formulario for destinado para atualização de post
       if(this.onEditUrl){
-        let updt = await this.firebase.updateDocument("Posts",this.onEditUrl,{
-          title:this.formPost.value.title, 
-          text: this.formPost.value.text
-        })
-        console.log(updt)
+        if(thumbnailURL || bannerURL){
+          let updt = await this.firebase.updateDocument("Posts",this.onEditUrl,{
+            title:this.formPost.value.title, 
+            text: this.formPost.value.text,
+            tag : this.formPost.value.tag,
+            bannerUrl: bannerURL
+          })
+          console.log(updt)
+        }else{
+          let updt = await this.firebase.updateDocument("Posts",this.onEditUrl,{
+            title:this.formPost.value.title, 
+            text: this.formPost.value.text,
+            tag : this.formPost.value.tag
+          })
+          console.log(updt)
+        }
 
       }else{
         // aqui você pode implementar a logica para fazer seu formulário salvar
@@ -74,7 +87,8 @@ export class FormCreatePostComponent implements OnInit{
           bannerUrl: bannerURL,
           author: {userId, userName, userPhoto},
           likes: 0,
-          datehour: new Date()
+          datehour: new Date(),
+          tag: this.formPost.value.tag
         }
         
         this.firebase.createDocument("Posts",newPost);

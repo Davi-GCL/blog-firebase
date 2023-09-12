@@ -12,7 +12,10 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   signOut,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword
 } from 'firebase/auth';
+
 import { IAuthor } from '../model/iauthor';
 
 
@@ -68,7 +71,38 @@ export class FirebaseService {
     localStorage.setItem('userPhoto',value.userPhoto);
   }
   
-  //------------------------------
+  //-----------------------------------------------------
+
+  signUpEmail(email:any, password:any){
+    createUserWithEmailAndPassword(this.auth, email, password)
+    .then((userCredential) => {
+      // Signed in 
+      const credential = userCredential.user;
+      this.user = {userId: credential.uid, userName: credential.displayName!, userPhoto:credential.photoURL!}
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // ..
+    });
+  }
+
+  async signInEmail(email:any, password:any){
+    signInWithEmailAndPassword(this.auth, email, password)
+    .then((userCredential) => {
+      // Signed in 
+      const credential = userCredential.user;
+      if(credential == null){throw new Error}
+      this.user = {userId: credential.uid, userName: credential.displayName || '', userPhoto:credential.photoURL || ''}
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.error(errorMessage)
+    });
+  }
 
   async myloginWithGoogle():Promise<any> {
     await signInWithPopup(this.auth, this.provider)
@@ -198,4 +232,5 @@ export class FirebaseService {
     
 
   }
+  
 }
