@@ -3,7 +3,7 @@
         <!-- <div class="card mb-3" style="max-width: 540px;" *ngFor="let post of postList" (click)="openPost(post.id)" id="post.id">
             <div class="row g-0">           
               <div class="col-md-8">
-                <!-- <div class="card-header d-flex align-items-center">
+                <div class="card-header d-flex align-items-center">
                   <img src={{post.author.userPhoto}}  class="rounded-2" style="height: 2rem;">
                   <h6 class="p-0 m-0">{{post.author.userName}}</h6>
                 </div> -->
@@ -43,11 +43,11 @@
                     <p class="card-text">{{post.text.slice(0,120)+'...'}}</p>
                 </div>
             </div>
-            <div class="col-md-4 w-100 " style="overflow: hidden; max-height: 250px; width: 540px;">
+            <div class="col-md-4 w-100 " (click)="openPost(post.id)" style="overflow: hidden; max-height: 250px; width: 540px;">
               <img src={{post.bannerUrl}} class="img-fluid post-image w-100" alt="Post image"
               style="overflow: hidden;">
             </div>
-            <div class="card-footer d-flex justify-content-end" style="padding-block: 5px;">
+            <div class="card-footer d-flex justify-content-start" style="padding-block: 5px;">
                 <p class="card-text align-self-end"><small class="text-body-secondary"><i class="bi bi-star"></i> {{post.likes}}</small></p>
             </div>
             

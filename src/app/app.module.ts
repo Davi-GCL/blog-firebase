@@ -11,6 +11,7 @@ import { CreatePostPageComponent } from './comps/pages/create-post-page/create-p
 import { HomePageComponent } from './comps/pages/home-page/home-page.component';
 import { NavbarComponent } from './comps/navbar/navbar.component';
 import { PostPageComponent } from './comps/pages/post-page/post-page.component';
+import { EditPostComponent } from './comps/pages/edit-post/edit-post.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { PostPageComponent } from './comps/pages/post-page/post-page.component';
     CreatePostPageComponent,
     HomePageComponent,
     NavbarComponent,
-    PostPageComponent
+    PostPageComponent,
+    EditPostComponent
   ],
   imports: [
     BrowserModule,

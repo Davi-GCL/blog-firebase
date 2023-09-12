@@ -61,4 +61,8 @@ export class PostPageComponent implements OnInit{
       console.log(this.commentsList)
     })
   }
+
+  toEditPost(){
+    this.router.navigate(['/edit-post',this.id]);
+  }
 }
