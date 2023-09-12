@@ -8,5 +8,5 @@ export class Post {
     bannerUrl:string = ''
     author:IAuthor = {userId:'',userName:'',userPhoto:''}
     likes:number = 0
-    datehour!:any 
+    datehour!:any | string
 }

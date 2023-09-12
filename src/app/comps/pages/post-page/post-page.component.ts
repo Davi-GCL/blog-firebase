@@ -65,4 +65,8 @@ export class PostPageComponent implements OnInit{
   toEditPost(){
     this.router.navigate(['/edit-post',this.id]);
   }
+
+  isAuthor(){
+    return this.post.author.userId == this.firebase.user.userId;
+  }
 }

@@ -1,5 +1,11 @@
 <div class="container mt-5 p-4">
     <div class="posts">
+
+      <form class="input-box mb-4" [formGroup]="searchForm">
+        <input type="text" class="form-control" formControlName="search" name="search">
+        <i class="bi bi-search"></i>                    
+      </form>
+
         <!-- <div class="card mb-3" style="max-width: 540px;" *ngFor="let post of postList" (click)="openPost(post.id)" id="post.id">
             <div class="row g-0">           
               <div class="col-md-8">
@@ -30,7 +36,7 @@
 
           <!-- <hr> -->
 
-          <div class="card post-card mb-4" *ngFor="let post of postList" style="max-width: 540px;" id="post.id">
+          <div class="card post-card mb-4" *ngFor="let post of postList|filter:search" style="max-width: 540px;" id="post.id">
             <div class="card-body d-flex align-items-start" (click)="openPost(post.id)">
                 <img src={{post.author.userPhoto}} alt="user photo" class="img-fluid author-avatar rounded-2" style="height: 2.75rem;">
                 <div class='text-start ms-3'>

@@ -30,4 +30,8 @@ export class LoginAreaComponent implements OnInit {
     localStorage.clear();
   }
 
+  openModal(){
+    
+  }
+
 }

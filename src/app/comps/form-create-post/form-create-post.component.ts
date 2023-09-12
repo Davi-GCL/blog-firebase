@@ -1,4 +1,4 @@
-import { AfterViewInit, Component , ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component , ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl , FormBuilder, FormGroup , Validators} from '@angular/forms';
 
 import { Post } from 'src/app/model/post';
@@ -14,6 +14,8 @@ export class FormCreatePostComponent implements OnInit{
   //O ! Sinaliza que o formulario será inicializado depois de sua declaração
   Url:any; 
   formPost!: FormGroup;
+
+  @Input() onEditUrl!:string
 
   @ViewChild('uploadThumb') uploadThumbnail!: InputImageComponent;
   @ViewChild('uploadBanner') uploadBanner!: InputImageComponent;
@@ -55,22 +57,33 @@ export class FormCreatePostComponent implements OnInit{
       
       let thumbnailURL = await this.uploadThumbnail.onSubmit()
       let bannerURL =  await this.uploadBanner.onSubmit()
-      // aqui você pode implementar a logica para fazer seu formulário salvar
-      let newPost:Post = {
-        title: this.formPost.value.title,
-        text: this.formPost.value.text,
-        thumbnailUrl: thumbnailURL,
-        bannerUrl: bannerURL,
-        author: {userId, userName, userPhoto},
-        likes: 0,
-        datehour: new Date()
+
+      if(this.onEditUrl){
+        let updt = await this.firebase.updateDocument("Posts",this.onEditUrl,{
+          title:this.formPost.value.title, 
+          text: this.formPost.value.text
+        })
+        console.log(updt)
+
+      }else{
+        // aqui você pode implementar a logica para fazer seu formulário salvar
+        let newPost:Post = {
+          title: this.formPost.value.title,
+          text: this.formPost.value.text,
+          thumbnailUrl: thumbnailURL,
+          bannerUrl: bannerURL,
+          author: {userId, userName, userPhoto},
+          likes: 0,
+          datehour: new Date()
+        }
+        
+        this.firebase.createDocument("Posts",newPost);
+        console.log(newPost);
+        
+        // Usar o método reset para limpar os controles na tela
+        this.formPost.reset(new Post());
       }
-      
-      this.firebase.createDocument("Posts",newPost);
-      console.log(newPost);
-      
-      // Usar o método reset para limpar os controles na tela
-      this.formPost.reset(new Post());
+
     }
   }
 }

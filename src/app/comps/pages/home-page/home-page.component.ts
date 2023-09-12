@@ -3,6 +3,7 @@ import { Post } from 'src/app/model/post';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { Router } from '@angular/router';
 import { PostService } from 'src/app/services/post.service';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-home-page',
@@ -11,6 +12,16 @@ import { PostService } from 'src/app/services/post.service';
 })
 export class HomePageComponent implements OnInit{
   postList!: Array<Post>;
+  searchForm = new FormGroup({
+    search: new FormControl('')
+  });
+
+  get search(){
+    if(this.searchForm.controls.search.value){
+      return this.searchForm.controls.search.value;
+    }
+    return '';
+  }
 
   constructor(private firebase: FirebaseService , private postShare:PostService , private router: Router){}
 
@@ -41,4 +52,5 @@ export class HomePageComponent implements OnInit{
       throw new Error('Post não encontrado')
     }
   }
+
 }

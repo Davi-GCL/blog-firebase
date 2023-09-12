@@ -4,7 +4,7 @@
         <div class="card-header d-flex justify-content-between">
             <p class="fw-medium m-0 ms-2"><a href="">posts</a> / <a href="">lorem</a> / ...</p>
             <div>
-                <small class="me-2 text-body-secondary">{{post.datehour}}</small> <a [routerLink]="['/edit-post',this.id]"><i class="bi bi-pencil-square text-primary"></i></a>
+                <small class="me-2 text-body-secondary">{{post.datehour}}</small> <a [routerLink]="['/edit-post',this.id]" *ngIf="isAuthor()"><i class="bi bi-pencil-square text-primary"></i></a>
             </div>
         </div>
         <!-- <small class="text-body-secondary pt-1 m-0 me-5 text-end ">{{post.datehour}}</small> -->
@@ -21,6 +21,9 @@
 
  <!-- ------------- Seção dos comentarios ------------ -->
  <section class="container comments p-5 d-grid justify-content-center" id="section-comments">
+
+    <h5 class="text-center text-secondary">Comentários ({{commentsList.length}}):</h5>
+
     <form [formGroup]="formComment" *ngIf="this.isSigned()">
         <label for="inputComment">Escreva um comentário</label>
         <textarea type="text" class="formControl" name="inputComment" formControlName="inputComment"></textarea>
@@ -31,9 +34,7 @@
         <h5 class="text-center text-danger">Faça login para comentar</h5>
     </div>
 
-    <h5 class="text-center text-secondary">Comentários ({{commentsList.length}}):</h5>
-    
-    <div class="justify-content-start">
+    <div class="justify-content-start">       
         <div class="card comment-card mb-4" *ngFor="let c of commentsList">
             <!-- <div class="card-header post-header d-flex align-items-center">
                 <img src={{c.author.userPhoto}} alt="user photo" class="img-fluid comment-avatar rounded-2">

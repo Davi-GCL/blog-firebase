@@ -174,7 +174,7 @@ export class FirebaseService {
     const docRef = doc(this.firestoreDB, collectionName, docName);
 
     //Atualiza apenas os campos passados
-    await updateDoc(docRef, {...updateObj , datehour: serverTimestamp()});
+    return await updateDoc(docRef, {...updateObj , datehour: serverTimestamp()});
   }
 
 
