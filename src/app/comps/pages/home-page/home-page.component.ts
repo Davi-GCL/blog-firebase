@@ -12,6 +12,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class HomePageComponent implements OnInit{
   postList!: Array<Post>;
+  trendPostsList!: Array<Post>;
   searchForm = new FormGroup({
     search: new FormControl('')
   });
@@ -27,7 +28,6 @@ export class HomePageComponent implements OnInit{
 
   ngOnInit(): void {
       this.getPosts()
-
   }
 
   getPosts(){
@@ -35,7 +35,7 @@ export class HomePageComponent implements OnInit{
       //Transforma o timestamp do formato firestore(presente no atributo datehour) para o datetime no formato string entendivel
       let aux = res as Array<Post>;
       this.postList = aux.map((p:any)=>{return {...p, datehour:new Date(p['datehour']['seconds']*1000).toLocaleString()}});
-      
+      this.trendPostsList = this.postList.sort(this.sortByLikes)
       console.log(this.postList)})
   }
 
@@ -57,5 +57,18 @@ export class HomePageComponent implements OnInit{
     // event.target
     let aux:number = parseInt(currentLikes) + 1
     this.firebase.updateDocument(`Posts`,postId, {likes:aux})
+  }
+
+  addTagSearch(event:any){
+    this.searchForm.controls.search.setValue("tag:"+event.target.innerText)
+  }
+
+  sortByLikes(a: Post, b: Post): number {
+    // this is the typical structure of a custom sort function in plain JavaScript
+
+    if (a.likes > b.likes) { return -1; }
+    if (a.likes === b.likes) { return 0; }
+    if (a.likes < b.likes) { return 1; }
+    throw new Error("Impossivel ordenar a lista de posts por likes")
   }
 }

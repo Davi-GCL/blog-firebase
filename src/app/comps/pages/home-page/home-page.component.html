@@ -1,10 +1,7 @@
 <div class="container mt-5 p-4">
-    <div class="posts">
-
-      <form class="input-box mb-4" [formGroup]="searchForm">
-        <input type="text" class="form-control" formControlName="search" name="search">
-        <i class="bi bi-search"></i>                    
-      </form>
+  <div class="row g-5">
+  
+    <div class="posts align-items-start col-md-8">
 
         <!-- <div class="card mb-3" style="max-width: 540px;" *ngFor="let post of postList" (click)="openPost(post.id)" id="post.id">
             <div class="row g-0">           
@@ -59,5 +56,50 @@
             
         </div>
     </div>
+
+<!-- ASIDE ------------------------------------------------------------------------  -->
+
+    <div class="col-md-4">
+      <div class="position-sticky border rounded-2 p-3" style="top: 5rem;">
+
+        <form class="input-box mb-4" [formGroup]="searchForm">
+          <input type="text" class="form-control" formControlName="search" name="search">
+          <i class="bi bi-search"></i>                    
+        </form>
+        
+        <div class="p-4 mb-3 bg-body-tertiary rounded">
+          <h4 class="text-body-secondary">Tags em alta:</h4>
+          <!-- <p class="mb-0">Customize this section to tell your visitors a little bit about your publication, writers, content, or something else entirely. Totally up to you.</p> -->
+          <span *ngFor="let item of postList | slice:0:5">
+            <button role="button" class="btn btn-secondary me-1 mb-2" (click)="addTagSearch($event)" *ngIf="item.tag">{{item.tag}}</button>
+          </span>
+          
+          
+        </div>
+
+        <div>
+          <h4 class="text-body-secondary">Posts em alta</h4>
+          <ul class="list-unstyled">
+            <li *ngFor="let tPost of trendPostsList | slice:0:4">
+              <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" (click)="openPost(tPost.id)">
+                <img src={{tPost.thumbnailUrl}} alt="" height="96">
+                <div class="col-lg-8">
+                  <h6 class="mb-0">{{tPost.title}}</h6>
+                  <p class="text-truncate m-0">{{tPost.text}}</p>
+                  <small class="text-body-secondary">{{tPost.datehour}}</small>
+                  <p class="card-text align-self-end text-body-secondary" ><i class="bi bi-star"></i> <small class="likes-number">{{tPost.likes}}</small></p>
+                </div>
+              </a>
+            </li>
+  
+          </ul>
+        </div>
+
+        
+      </div>
+    </div>
+  <!-- \ASIDE ------------------------------------------------------------------------  -->  
+ </div>
+
 </div>
 <!-- text-truncate -->

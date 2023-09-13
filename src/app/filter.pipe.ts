@@ -20,8 +20,10 @@ export class FilterPipe implements PipeTransform {
     if(filterStatus.startsWith('tag:')){
       let searchValue = filterStatus.replace('tag:','')
       for(let aux of value){
-        if(aux.tag.toLowerCase().replace(' ','').includes(searchValue)){
-          resultData.push(aux);
+        if(aux.tag){
+          if(aux.tag.toLowerCase().replace(' ','').includes(searchValue)){
+            resultData.push(aux);
+          }
         }
       }
       return resultData;

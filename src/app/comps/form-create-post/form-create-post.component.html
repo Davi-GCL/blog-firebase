@@ -9,7 +9,7 @@
     <!-- <app-input-image #uploadThumb [destinationFolder]="'thumbnails'"></app-input-image> -->
     <app-input-image #uploadBanner [destinationFolder]="'banners'"></app-input-image>
 
-    <input type="text" class="form-control mb-3" formControlName="tag" name="tag" id="inputTag" placeholder="tag" style="max-width: 500px;">
+    <input type="text" class="form-control mb-3" formControlName="tag" name="tag" id="inputTag" placeholder="tag" style="max-width: 200px;">
 
     <button type="submit" class="btn btn-primary">Publicar</button>
     <small class="ms-3 text-danger" *ngIf="title.invalid && formDir.touched">O titulo é obrigatório</small>

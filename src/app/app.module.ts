@@ -15,6 +15,7 @@ import { PostPageComponent } from './comps/pages/post-page/post-page.component';
 import { EditPostComponent } from './comps/pages/edit-post/edit-post.component';
 import { FilterPipe } from './filter.pipe';
 import { AboutPageComponent } from './comps/pages/about-page/about-page.component';
+import { FormFilterComponent } from './comps/form-filter/form-filter.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { AboutPageComponent } from './comps/pages/about-page/about-page.componen
     PostPageComponent,
     EditPostComponent,
     FilterPipe,
-    AboutPageComponent
+    AboutPageComponent,
+    FormFilterComponent
   ],
   imports: [
     BrowserModule,

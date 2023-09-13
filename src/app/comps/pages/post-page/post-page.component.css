@@ -10,7 +10,7 @@
 
 .form-comment{
     display: grid;
-    justify-content: end;
+    /* justify-content: end; */
     justify-items: end;
 }
 

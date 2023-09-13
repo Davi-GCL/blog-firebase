@@ -11,7 +11,7 @@
         <div class="card-body" id="post-text">
             <h2>{{post.title}}</h2>
             <hr>
-            <img class="img-fluid my-3" src={{post.bannerUrl}} alt="">
+            <img class="img-fluid my-3 w-100" src={{post.bannerUrl}} alt="">
             <!-- <small class="">{{post.datehour}}</small> -->
             <p>{{post.text}}</p>
         </div>
@@ -21,19 +21,21 @@
 </div>
 
  <!-- ------------- Seção dos comentarios ------------ -->
- <section class="container comments p-5 d-grid justify-content-center" id="section-comments" style="max-width: 529px;">
+ <div class="container comments d-grid justify-content-center" id="section-comments" style="width: 90vw; max-width: 900px !important;">
 
+ <div class="row mb-4 w-100">
     <h5 class="text-center text-secondary mb-3">Comentários ({{commentsList.length}}):</h5>
 
-    <form class="form-comment mb-4" [formGroup]="formComment" *ngIf="this.isSigned()">
+    <form class="form-comment w-100" [formGroup]="formComment" *ngIf="this.isSigned()">
         <!-- <label for="inputComment" class="form-label">Escreva um comentário</label> -->
-        <textarea type="text" class="form-control" name="inputComment" placeholder="Escreva seu comentário" formControlName="inputComment" style="height: 87px;width: 66.5vw;"></textarea>
+        <textarea type="text" class="form-control" name="inputComment" placeholder="Escreva seu comentário" formControlName="inputComment" style="height: 87px;width: 100%;"></textarea>
         <button type="submit" class="btn btn-primary mt-2" (click)="uploadComment()">Enviar</button>
     </form>
 
     <div class="comment-warn" *ngIf="!this.isSigned()">
         <h5 class="text-center text-danger">Faça login para comentar</h5>
     </div>
+ </div>
 
     <div class="justify-content-center">       
         <div class="card comment-card mb-4" *ngFor="let c of commentsList">
@@ -61,4 +63,4 @@
             
         </div>
     </div>
-</section>
+ </div>

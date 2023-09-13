@@ -54,11 +54,16 @@ export class FormCreatePostComponent implements OnInit{
       alert('Você deve estar cadastrado para publicar!')
       throw new Error('Proibido enviar sem login!')
     }
+    else if(!this.formPost.value.title || !this.formPost.value.text) {
+      alert('Formulário invalido!')
+      throw new Error('Formulario invalido!')
+    }
     else{
       
       // let thumbnailURL = await this.uploadThumbnail.onSubmit()
       let thumbnailURL:any = null
       let bannerURL =  await this.uploadBanner.onSubmit()
+      console.log(bannerURL);
 
       //Trecho que só será executado se o formulario for destinado para atualização de post
       if(this.onEditUrl){
@@ -67,14 +72,16 @@ export class FormCreatePostComponent implements OnInit{
             title:this.formPost.value.title, 
             text: this.formPost.value.text,
             tag : this.formPost.value.tag,
-            bannerUrl: bannerURL
+            bannerUrl: bannerURL,
+            datehour: new Date()
           })
           console.log(updt)
         }else{
           let updt = await this.firebase.updateDocument("Posts",this.onEditUrl,{
             title:this.formPost.value.title, 
             text: this.formPost.value.text,
-            tag : this.formPost.value.tag
+            tag : this.formPost.value.tag,
+            datehour: new Date()
           })
           console.log(updt)
         }
