@@ -53,4 +53,9 @@ export class HomePageComponent implements OnInit{
     }
   }
 
+  updateLikes(event:any, postId:string, currentLikes:any){
+    // event.target
+    let aux:number = parseInt(currentLikes) + 1
+    this.firebase.updateDocument(`Posts`,postId, {likes:aux})
+  }
 }

@@ -186,7 +186,10 @@ export class FirebaseService {
 
   async getDocuments(collectionName:string){
     const collectionRef = collection(this.firestoreDB, collectionName);
-    let docArray = await getDocs(collectionRef);
+    // let docArray = await getDocs(collectionRef);
+    //Faz uma consulta no banco de dados, ordenando os dados com base no campo datehour em ordem decrescente
+    const q = query(collectionRef, orderBy("datehour", "desc"))
+    let docArray = await getDocs(q);
 
     //Puxa e retorna os campos presentes nesse documento
     return docArray.docs.map((doc)=>({ ...doc.data(), id: doc.id}));

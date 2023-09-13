@@ -45,13 +45,6 @@ export class PostPageComponent implements OnInit{
     this.firebase.getDocument('Posts', postId).then((res)=>{if(res){this.post = {...res , datehour: new Date(res['datehour']['seconds']*1000).toLocaleString()}}});
   }
 
-  uploadComment(){
-    let newComment = new MyComment(this.firebase.user, this.commentary, new Date())
-
-    this.firebase.createDocument(`Posts/${this.id}/coments`,{...newComment})
-    this.router.navigate([this.router.url]);
-  }
-
   getComments(){
     this.firebase.getDocuments(`Posts/${this.id}/coments`).then((res)=>{
       let aux = res as Array<MyComment>;
@@ -60,6 +53,16 @@ export class PostPageComponent implements OnInit{
       
       console.log(this.commentsList)
     })
+  }
+
+  uploadComment(){
+    let newComment = new MyComment(this.firebase.user, this.commentary, new Date())
+
+    this.firebase.createDocument(`Posts/${this.id}/coments`,{...newComment}).then((res)=>{
+      this.getComments()
+    })
+    // this.router.navigate([this.router.url]);
+
   }
 
   toEditPost(){

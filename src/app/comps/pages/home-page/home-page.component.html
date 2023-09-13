@@ -54,7 +54,7 @@
               style="overflow: hidden;">
             </div>
             <div class="card-footer d-flex justify-content-start" style="padding-block: 5px;">
-                <p class="card-text align-self-end"><small class="text-body-secondary"><i class="bi bi-star"></i> {{post.likes}}</small></p>
+                <p class="card-text align-self-end text-body-secondary" ><i class="bi bi-star" (click)="updateLikes($event, post.id, post.likes)"></i> <small class="likes-number">{{post.likes}}</small></p>
             </div>
             
         </div>

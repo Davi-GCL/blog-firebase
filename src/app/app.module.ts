@@ -14,6 +14,7 @@ import { NavbarComponent } from './comps/navbar/navbar.component';
 import { PostPageComponent } from './comps/pages/post-page/post-page.component';
 import { EditPostComponent } from './comps/pages/edit-post/edit-post.component';
 import { FilterPipe } from './filter.pipe';
+import { AboutPageComponent } from './comps/pages/about-page/about-page.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { FilterPipe } from './filter.pipe';
     NavbarComponent,
     PostPageComponent,
     EditPostComponent,
-    FilterPipe
+    FilterPipe,
+    AboutPageComponent
   ],
   imports: [
     BrowserModule,

@@ -56,7 +56,8 @@ export class FormCreatePostComponent implements OnInit{
     }
     else{
       
-      let thumbnailURL = await this.uploadThumbnail.onSubmit()
+      // let thumbnailURL = await this.uploadThumbnail.onSubmit()
+      let thumbnailURL:any = null
       let bannerURL =  await this.uploadBanner.onSubmit()
 
       //Trecho que só será executado se o formulario for destinado para atualização de post

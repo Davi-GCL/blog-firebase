@@ -5,12 +5,14 @@ import { CreatePostPageComponent } from './comps/pages/create-post-page/create-p
 import { HomePageComponent } from './comps/pages/home-page/home-page.component';
 import { PostPageComponent } from './comps/pages/post-page/post-page.component';
 import { EditPostComponent } from './comps/pages/edit-post/edit-post.component';
+import { AboutPageComponent } from './comps/pages/about-page/about-page.component';
 
 const routes: Routes = [
   {path:'',component: HomePageComponent},
   {path:'new-post',component: CreatePostPageComponent},
   {path:'post/:id',component:PostPageComponent},
-  {path:'edit-post/:id',component:EditPostComponent}
+  {path:'edit-post/:id',component:EditPostComponent},
+  {path:'about',component:AboutPageComponent}
 
 ];
 

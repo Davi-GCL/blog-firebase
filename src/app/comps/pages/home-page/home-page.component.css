@@ -1,3 +1,5 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
+
 .posts{
     display: grid;
     justify-content: center;
@@ -32,4 +34,9 @@
     background-color: #eeeeee69;
     box-shadow: none;
     border-color: #eee;
+  }
+
+  .bi-star:hover::before{
+    color:yellow;
+    /* content: '\F586'!important; */
   }
