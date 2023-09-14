@@ -14,6 +14,8 @@ export class FormCreatePostComponent implements OnInit{
   //O ! Sinaliza que o formulario será inicializado depois de sua declaração
   Url:any; 
   formPost!: FormGroup;
+  thumbnailURL!: string;
+  bannerURL!: string;
 
   @Input() onEditUrl!:string
 
@@ -59,9 +61,8 @@ export class FormCreatePostComponent implements OnInit{
       throw new Error('Formulario invalido!')
     }
     else{
-      
-      // let thumbnailURL = await this.uploadThumbnail.onSubmit()
-      let thumbnailURL:any = null
+      let thumbnailURL = await this.uploadThumbnail.onSubmit()
+      // let thumbnailURL:any = null
       let bannerURL =  await this.uploadBanner.onSubmit()
       console.log(bannerURL);
 
@@ -72,7 +73,8 @@ export class FormCreatePostComponent implements OnInit{
             title:this.formPost.value.title, 
             text: this.formPost.value.text,
             tag : this.formPost.value.tag,
-            bannerUrl: bannerURL,
+            bannerUrl: bannerURL? bannerURL : this.bannerURL,
+            thumbnailUrl: thumbnailURL? thumbnailURL : this.thumbnailURL,
             datehour: new Date()
           })
           console.log(updt)

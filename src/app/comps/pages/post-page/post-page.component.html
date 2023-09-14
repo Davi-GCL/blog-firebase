@@ -4,7 +4,9 @@
         <div class="card-header d-flex justify-content-between">
             <p class="fw-medium m-0 ms-2"><a [routerLink]="['/']" >posts</a> / <a href="">{{post.tag}}</a> / ...</p>
             <div>
-                <small class="me-2 text-body-secondary">{{post.datehour}}</small> <a [routerLink]="['/edit-post',this.id]" *ngIf="isAuthor()"><i class="bi bi-pencil-square text-primary"></i></a>
+                <small class="me-2 text-body-secondary">{{post.datehour}}</small>
+                 <a [routerLink]="['/edit-post',this.id]" *ngIf="isAuthor()"><i class="bi bi-pencil-square text-primary"></i></a>
+                 <span class="ms-2" role="button" *ngIf="isAuthor()" (click)="deletePost()"><i class="bi bi-trash3 text-danger"></i></span>
             </div>
         </div>
         <!-- <small class="text-body-secondary pt-1 m-0 me-5 text-end ">{{post.datehour}}</small> -->
