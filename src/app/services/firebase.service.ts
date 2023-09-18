@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { getDatabase, ref, onValue, set } from "firebase/database";
-import { getFirestore, doc, setDoc, getDocs, addDoc, collection, updateDoc, serverTimestamp, query, orderBy, where, getDoc } from "firebase/firestore"
+import { getFirestore, doc, setDoc, getDocs, addDoc, collection, updateDoc, serverTimestamp, query, orderBy, where, getDoc, deleteDoc } from "firebase/firestore"
 
 import { getDownloadURL, getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
 
@@ -205,6 +205,10 @@ export class FirebaseService {
     //Atualiza apenas os campos passados
     // return await updateDoc(docRef, {...updateObj , datehour: serverTimestamp()});
     return await updateDoc(docRef, {...updateObj});
+  }
+
+  async deleteDocument(collectionName:string, docName:string){
+    return await deleteDoc(doc(this.firestoreDB, collectionName, docName));
   }
 
 

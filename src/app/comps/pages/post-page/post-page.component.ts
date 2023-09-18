@@ -69,6 +69,16 @@ export class PostPageComponent implements OnInit{
     this.router.navigate(['/edit-post',this.id]);
   }
 
+  deletePost(){
+    if(window.confirm("Você tem certeza que deseja deletar?")){
+      if(this.id){
+        this.firebase.deleteDocument("Posts",this.id);
+      }else{
+        throw new Date("Não foi possivel pegar o id");
+      }
+    }
+  }
+
   isAuthor(){
     return this.post.author.userId == this.firebase.user.userId;
   }
