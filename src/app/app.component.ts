@@ -16,7 +16,9 @@ export class AppComponent implements OnInit {
   postID = "";
   userId:string | null = null;
   
-  constructor(public firebase: FirebaseService){}
+  constructor(public firebase: FirebaseService){
+    
+  }
   ngOnInit(): void {
       this.getPosts()
       this.userId = localStorage.getItem('userName');

@@ -18,7 +18,7 @@ import {
 
 import { IAuthor } from '../model/iauthor';
 
-
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -28,15 +28,7 @@ export class FirebaseService {
   constructor() { }
 
   // Your web app's Firebase configuration
-  firebaseConfig = {
-    apiKey: "AIzaSyBNselSlIxZRkBOc6j5nF53CELVTCAXWQE",
-    authDomain: "angular-blog-d58d9.firebaseapp.com",
-    databaseURL: "https://angular-blog-d58d9-default-rtdb.firebaseio.com",
-    projectId: "angular-blog-d58d9",
-    storageBucket: "angular-blog-d58d9.appspot.com",
-    messagingSenderId: "777260546336",
-    appId: "1:777260546336:web:661f58bd09d190c50cbf45"
-  };
+  firebaseConfig = environment.firebaseConfig;
 
   // Initialize Firebase
   app = initializeApp(this.firebaseConfig);

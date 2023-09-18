@@ -16,6 +16,7 @@ import { EditPostComponent } from './comps/pages/edit-post/edit-post.component';
 import { FilterPipe } from './filter.pipe';
 import { AboutPageComponent } from './comps/pages/about-page/about-page.component';
 import { FormFilterComponent } from './comps/form-filter/form-filter.component';
+import { AlertMessageComponent } from './comps/alert-message/alert-message.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { FormFilterComponent } from './comps/form-filter/form-filter.component';
     EditPostComponent,
     FilterPipe,
     AboutPageComponent,
-    FormFilterComponent
+    FormFilterComponent,
+    AlertMessageComponent
   ],
   imports: [
     BrowserModule,
