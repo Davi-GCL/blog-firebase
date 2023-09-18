@@ -6,6 +6,7 @@ import { PostService } from 'src/app/services/post.service';
 import { Router } from '@angular/router';
 
 import { Comment as MyComment } from 'src/app/model/comment';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-post-page',
@@ -25,7 +26,7 @@ export class PostPageComponent implements OnInit{
     return this.formComment.controls['inputComment'].value;
   }
 
-  constructor(private route: ActivatedRoute, private postShared: PostService , private firebase: FirebaseService , public router: Router){}
+  constructor(private route: ActivatedRoute, private postShared: PostService , private firebase: FirebaseService , public router: Router , public alertService: AlertService){}
 
   isSigned(){
     return this.firebase.user.userId?true:false;
@@ -76,6 +77,8 @@ export class PostPageComponent implements OnInit{
       }else{
         throw new Date("Não foi possivel pegar o id");
       }
+      this.router.navigate(['/'])
+      this.alertService.add("Post deletado com sucesso!",`Post deletado: ${this.post.title}`)
     }
   }
 

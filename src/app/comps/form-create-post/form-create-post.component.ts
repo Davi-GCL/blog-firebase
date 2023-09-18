@@ -107,7 +107,7 @@ export class FormCreatePostComponent implements OnInit{
         
         // Usar o método reset para limpar os controles na tela
         this.formPost.reset(new Post());
-        this.alertService.add("Post publicado com sucesso!",`Titúlo: ${newPost.title} . Tag: ${newPost.tag}` )
+        this.alertService.add("Post publicado com sucesso!",`Título: ${newPost.title} . Tag: ${newPost.tag}` )
       }
 
     }

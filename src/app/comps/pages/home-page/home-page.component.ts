@@ -35,7 +35,9 @@ export class HomePageComponent implements OnInit{
       //Transforma o timestamp do formato firestore(presente no atributo datehour) para o datetime no formato string entendivel
       let aux = res as Array<Post>;
       this.postList = aux.map((p:any)=>{return {...p, datehour:new Date(p['datehour']['seconds']*1000).toLocaleString()}});
-      this.trendPostsList = this.postList.sort(this.sortByLikes)
+
+      this.trendPostsList = [...this.postList]
+      this.trendPostsList.sort(this.sortByLikes) //O metodo array.sort modifica o proprio array passado e retorna um ponteiro de referencia para esse array
       console.log(this.postList)})
   }
 
