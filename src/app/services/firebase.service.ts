@@ -13,7 +13,8 @@ import {
   GoogleAuthProvider,
   signOut,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  updateProfile
 } from 'firebase/auth';
 
 import { IAuthor } from '../model/iauthor';
@@ -65,13 +66,21 @@ export class FirebaseService {
   
   //-----------------------------------------------------
 
-  signUpEmail(email:any, password:any){
+  signUpEmail(email:any, password:any, name:any, photoURL?:string){
     createUserWithEmailAndPassword(this.auth, email, password)
     .then((userCredential) => {
       // Signed in 
       const credential = userCredential.user;
-      this.user = {userId: credential.uid, userName: credential.displayName!, userPhoto:credential.photoURL!}
-      // ...
+
+      if(this.auth.currentUser){
+        //Após a criação de um usuario com email e senha, atualiza o perfil de usuario adicionando um nome e uma foto
+        updateProfile(userCredential.user, {
+          displayName: name, photoURL: "https://firebasestorage.googleapis.com/v0/b/angular-blog-d58d9.appspot.com/o/images%2Fblank-profile-picture-973460_1280.jpg?alt=media&token=00439f5f-6a73-4b19-b711-5d0b4d0ea62b"
+        }).then(()=>{
+          this.user = {userId: credential.uid, userName: userCredential.user.displayName!, userPhoto:userCredential.user.photoURL!}
+        })
+      }
+      
     })
     .catch((error) => {
       const errorCode = error.code;

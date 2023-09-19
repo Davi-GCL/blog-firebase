@@ -5,6 +5,7 @@ import { Post } from 'src/app/model/post';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { InputImageComponent } from '../input-image/input-image.component';
 import { AlertService } from 'src/app/services/alert.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-form-create-post',
@@ -23,7 +24,7 @@ export class FormCreatePostComponent implements OnInit{
   @ViewChild('uploadThumb') uploadThumbnail!: InputImageComponent;
   @ViewChild('uploadBanner') uploadBanner!: InputImageComponent;
   
-  constructor(private formBuilder: FormBuilder, private firebase: FirebaseService, public alertService: AlertService){}
+  constructor(private formBuilder: FormBuilder, private firebase: FirebaseService, public alertService: AlertService, private router : Router){}
 
   ngOnInit(): void {
       this.createForm(new Post());
@@ -89,6 +90,7 @@ export class FormCreatePostComponent implements OnInit{
           console.log(updt)
         }
         this.alertService.add("Post atualizado com sucesso!");
+        this.router.navigate(['/']);
       }else{
         // aqui você pode implementar a logica para fazer seu formulário salvar
         let newPost:Post = {
@@ -108,6 +110,7 @@ export class FormCreatePostComponent implements OnInit{
         // Usar o método reset para limpar os controles na tela
         this.formPost.reset(new Post());
         this.alertService.add("Post publicado com sucesso!",`Título: ${newPost.title} . Tag: ${newPost.tag}` )
+        this.router.navigate(['/']);
       }
 
     }

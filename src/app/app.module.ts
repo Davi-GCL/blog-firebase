@@ -17,6 +17,7 @@ import { FilterPipe } from './filter.pipe';
 import { AboutPageComponent } from './comps/pages/about-page/about-page.component';
 import { FormFilterComponent } from './comps/form-filter/form-filter.component';
 import { AlertMessageComponent } from './comps/alert-message/alert-message.component';
+import { AuthModalComponent } from './comps/auth-modal/auth-modal.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { AlertMessageComponent } from './comps/alert-message/alert-message.compo
     FilterPipe,
     AboutPageComponent,
     FormFilterComponent,
-    AlertMessageComponent
+    AlertMessageComponent,
+    AuthModalComponent
   ],
   imports: [
     BrowserModule,

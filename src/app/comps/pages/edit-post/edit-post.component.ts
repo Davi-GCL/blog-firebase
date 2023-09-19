@@ -32,6 +32,7 @@ export class EditPostComponent implements OnInit, AfterViewChecked {
       
       this.formComp.formPost.controls['title'].setValue(res.title);
       this.formComp.formPost.controls['text'].setValue(res.text);
+      this.formComp.formPost.controls['tag'].setValue(res.tag);
       this.formComp.bannerURL = res.bannerUrl;
       this.formComp.thumbnailURL = res.thumbnailUrl;
     }).catch((err)=>{
