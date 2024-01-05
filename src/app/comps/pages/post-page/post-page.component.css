@@ -1,4 +1,4 @@
-.comment-avatar{
+/* .comment-avatar{
     height: 3rem;
 }
 
@@ -6,7 +6,7 @@
     max-width: 80%;
     width: fit-content;
     box-sizing: border-box;
-}
+} */
 
 .form-comment{
     display: grid;

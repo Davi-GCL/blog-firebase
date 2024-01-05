@@ -18,6 +18,7 @@ import { AboutPageComponent } from './comps/pages/about-page/about-page.componen
 import { FormFilterComponent } from './comps/form-filter/form-filter.component';
 import { AlertMessageComponent } from './comps/alert-message/alert-message.component';
 import { AuthModalComponent } from './comps/auth-modal/auth-modal.component';
+import { CommentCardComponent } from './comps/comment-card/comment-card.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { AuthModalComponent } from './comps/auth-modal/auth-modal.component';
     AboutPageComponent,
     FormFilterComponent,
     AlertMessageComponent,
-    AuthModalComponent
+    AuthModalComponent,
+    CommentCardComponent
   ],
   imports: [
     BrowserModule,
