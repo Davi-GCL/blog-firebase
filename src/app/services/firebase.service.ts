@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { getDatabase, ref, onValue, set } from "firebase/database";
-import { getFirestore, doc, setDoc, getDocs, addDoc, collection, updateDoc, serverTimestamp, query, orderBy, where, getDoc, deleteDoc } from "firebase/firestore"
+import { getFirestore, doc, setDoc, getDocs, addDoc, collection, updateDoc, serverTimestamp, query, orderBy, where, getDoc, deleteDoc, DocumentReference, WhereFilterOp } from "firebase/firestore"
 
 import { getDownloadURL, getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
 
@@ -197,15 +197,27 @@ export class FirebaseService {
   }
 
   async getDocument(collectionName:string, docId:string){
-    const collectionRef = collection(this.firestoreDB, collectionName);
+    // const collectionRef = collection(this.firestoreDB, collectionName);
     
     return (await getDoc(doc(this.firestoreDB, collectionName, docId))).data();
   }
 
-  async createDocument(collectionName:string, data:any){
+  async getDocumentsWhere(collectionPath:string, whereProperty:string, whereFilterOp:WhereFilterOp, whereValue:any):Promise<any>
+  {
+    const collectionRef = collection(this.firestoreDB, collectionPath);
+
+    let q = query(collectionRef, where(whereProperty, whereFilterOp, whereValue));
+
+    return await getDocs(q);
+  }
+
+  async createDocument(collectionName:string, data:any): Promise<DocumentReference>{
     //Cria um documento (registro/linha) na coleção(tabela) informada
     const docRef = await addDoc(collection(this.firestoreDB, collectionName), data);
+    
     console.log("Document written with ID: ", docRef.id);
+
+    return docRef;
   }
 
   async updateDocument(collectionName:string , docName:string, updateObj:any){
