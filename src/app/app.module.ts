@@ -19,6 +19,7 @@ import { FormFilterComponent } from './comps/form-filter/form-filter.component';
 import { AlertMessageComponent } from './comps/alert-message/alert-message.component';
 import { AuthModalComponent } from './comps/auth-modal/auth-modal.component';
 import { CommentCardComponent } from './comps/comment-card/comment-card.component';
+import { PostCardComponent } from './comps/post-card/post-card.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { CommentCardComponent } from './comps/comment-card/comment-card.componen
     FormFilterComponent,
     AlertMessageComponent,
     AuthModalComponent,
-    CommentCardComponent
+    CommentCardComponent,
+    PostCardComponent
   ],
   imports: [
     BrowserModule,

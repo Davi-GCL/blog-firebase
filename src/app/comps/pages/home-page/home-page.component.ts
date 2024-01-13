@@ -11,8 +11,7 @@ import { FormControl, FormGroup } from '@angular/forms';
   styleUrls: ['./home-page.component.css']
 })
 export class HomePageComponent implements OnInit{
-  postList!: Array<Post>;
-  trendPostsList!: Array<Post>;
+
   searchForm = new FormGroup({
     search: new FormControl('')
   });
@@ -24,53 +23,18 @@ export class HomePageComponent implements OnInit{
     return '';
   }
 
-  constructor(private firebase: FirebaseService , private postShare:PostService , private router: Router){}
+  constructor(public postService:PostService , private router: Router){}
 
   ngOnInit(): void {
-      this.getPosts()
+    this.postService.getPosts().then((res)=>this.postService.sortPosts());
   }
 
-  getPosts(){
-    this.firebase.getDocuments("Posts").then((res)=>{
-      //Transforma o timestamp do formato firestore(presente no atributo datehour) para o datetime no formato string entendivel
-      let aux = res as Array<Post>;
-      this.postList = aux.map((p:any)=>{return {...p, datehour:new Date(p['datehour']['seconds']*1000).toLocaleString()}});
-
-      this.trendPostsList = [...this.postList]
-      this.trendPostsList.sort(this.sortByLikes) //O metodo array.sort modifica o proprio array passado e retorna um ponteiro de referencia para esse array
-      console.log(this.postList)})
-  }
 
   buildPreview(array:Array<string>):string{
     return array.reduce((pre:string,current:string)=>pre+' '+current)
   }
 
-  openPost(postId:any){
-    let post = this.postList.find((p)=>p.id==postId);
-    if(post){
-      this.postShare.setSharedPost(post);
-      this.router.navigate(['/post',postId]);
-    }else{
-      throw new Error('Post não encontrado')
-    }
-  }
-
-  updateLikes(event:any, postId:string, currentLikes:any){
-    // event.target
-    let aux:number = parseInt(currentLikes) + 1
-    this.firebase.updateDocument(`Posts`,postId, {likes:aux})
-  }
-
   addTagSearch(event:any){
     this.searchForm.controls.search.setValue("tag:"+event.target.innerText)
-  }
-
-  sortByLikes(a: Post, b: Post): number {
-    // this is the typical structure of a custom sort function in plain JavaScript
-
-    if (a.likes > b.likes) { return -1; }
-    if (a.likes === b.likes) { return 0; }
-    if (a.likes < b.likes) { return 1; }
-    throw new Error("Impossivel ordenar a lista de posts por likes")
   }
 }
