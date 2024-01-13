@@ -99,14 +99,14 @@ export class FormCreatePostComponent implements OnInit{
           thumbnailUrl: thumbnailURL,
           bannerUrl: bannerURL,
           author: {userId, userName, userPhoto},
-          likes: 0,
+          likes: [],
           datehour: new Date(),
           tag: this.formPost.value.tag
         }
         
-        this.firebase.createDocument("Posts",newPost);
-        console.log(newPost);
-        
+        let postId = (await this.firebase.createDocument("Posts",newPost)).id;
+        // console.log(newPost);
+ 
         // Usar o método reset para limpar os controles na tela
         this.formPost.reset(new Post());
         this.alertService.add("Post publicado com sucesso!",`Título: ${newPost.title} . Tag: ${newPost.tag}` )

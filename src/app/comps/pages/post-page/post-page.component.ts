@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 
 import { Comment as MyComment } from 'src/app/model/comment';
 import { AlertService } from 'src/app/services/alert.service';
+ 
+import { RatingService } from 'src/app/services/rating.service';
 
 @Component({
   selector: 'app-post-page',
@@ -26,7 +28,7 @@ export class PostPageComponent implements OnInit{
     return this.formComment.controls['inputComment'].value;
   }
 
-  constructor(private route: ActivatedRoute, private postShared: PostService , private firebase: FirebaseService , public router: Router , public alertService: AlertService){}
+  constructor(private route: ActivatedRoute, public postService: PostService, public rateService: RatingService , private firebase: FirebaseService , public router: Router , public alertService: AlertService){}
 
   isSigned(){
     return this.firebase.user.userId?true:false;
@@ -36,7 +38,8 @@ export class PostPageComponent implements OnInit{
     this.id = this.route.snapshot.paramMap.get('id')
     if(this.id){
       this.getPost(this.id);
-      this.getComments();
+      
+      this.rateService.getComments(this.id).then((result)=>this.commentsList = result);
     }
   }
 
@@ -46,24 +49,11 @@ export class PostPageComponent implements OnInit{
     this.firebase.getDocument('Posts', postId).then((res)=>{if(res){this.post = {...res , datehour: new Date(res['datehour']['seconds']*1000).toLocaleString()}}});
   }
 
-  getComments(){
-    this.firebase.getDocuments(`Posts/${this.id}/coments`).then((res)=>{
-      let aux = res as Array<MyComment>;
-      //Transforma o timestamp do formato firestore(presente no atributo datehour) para o datetime no formato string entendivel
-      this.commentsList = aux.map((c:any)=>{return {...c, datehour:new Date(c['datehour']['seconds']*1000).toLocaleString()}});
-      
-      console.log(this.commentsList)
-    })
-  }
+  uploadComment()
+  {
+    if(!this.id) throw new Error("Nao foi possivel acessar o id do post para comentar");
 
-  uploadComment(){
-    let newComment = new MyComment(this.firebase.user, this.commentary, new Date())
-
-    this.firebase.createDocument(`Posts/${this.id}/coments`,{...newComment}).then((res)=>{
-      this.getComments()
-    })
-    // this.router.navigate([this.router.url]);
-
+    this.rateService.uploadComment(this.id, this.commentary).then((result)=>this.commentsList = result);
   }
 
   toEditPost(){
