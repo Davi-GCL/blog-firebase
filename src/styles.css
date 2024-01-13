@@ -1,3 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~bootstrap/dist/css/bootstrap.min.css";
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css");
+
+.posts{
+    display: grid;
+    justify-content: center;
+}
+
+.posts{
+    cursor: pointer;
+}
+
+.publish-date{
+    font-size: 12px !important;
+}
+
+.bi-star{
+    vertical-align: text-bottom !important;
+}
+.bi-star:hover::before{
+color:yellow;
+/* content: '\F586'!important; */
+}
