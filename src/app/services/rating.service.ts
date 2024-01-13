@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FirebaseService } from './firebase.service';
 import { Comment as MyComment } from 'src/app/model/comment';
-import { Like } from '../model/like';
+
 
 @Injectable({
   providedIn: 'root'
@@ -49,12 +49,19 @@ export class RatingService {
 
   }
 
-  updateCommentLikes(postId:string, commentId:string, currentLikes:any, userId:string, event:any){
-    console.log(event.target.classList);
+  updateCommentLikes(postId:string, commentId:string, currentLikes:Array<string>){
+
+    let userId = this.firebase.user.userId;
+
+    let userLikeIndex:number = currentLikes.findIndex(x=>x === userId)
+
+    if(userLikeIndex != -1){
+      this.firebase.updateDocument(`Posts/${postId}/comments`, commentId, currentLikes.map((v:string, i:number) => i != userLikeIndex));
+    }
+    else{
+      this.firebase.updateDocument(`Posts/${postId}/comments`, commentId, currentLikes.push(userId));
+    }
     
-    let updtLikes:number = parseInt(currentLikes) + 1;
-    
-    this.firebase.createDocument(`Posts/${postId}/comments/${commentId}/likes`, new Like(userId));
-    this.firebase.updateDocument(`Posts/${postId}/comments`,commentId, {likes: updtLikes});
+    // this.firebase.createDocument(`Posts/${postId}/comments/${commentId}/likes`, new Like(userId));
   }
 }
