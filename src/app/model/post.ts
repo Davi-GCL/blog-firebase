@@ -7,7 +7,7 @@ export class Post {
     thumbnailUrl:string = ''
     bannerUrl:string = ''
     author:IAuthor = {userId:'',userName:'',userPhoto:''}
-    likes:Array<string> = []
-    datehour!:any | string
+    likes!:Array<string>;
+    datehour!:any | string;
     tag?:any = ''
 }

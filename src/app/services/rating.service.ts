@@ -38,13 +38,23 @@ export class RatingService {
 
     let userId = this.firebase.user.userId;
 
+    if(!userId) throw new Error("ID de usuario nulo!")
+
     let userLikeIndex:number = currentLikes.findIndex(x=>x === userId)
 
     if(userLikeIndex != -1){
-      this.firebase.updateDocument(`Posts/`,postId, currentLikes.map((v:string, i:number) => i != userLikeIndex));
+    //Removendo o usuario da lista de likes
+      let updatedLikesList = currentLikes.filter((value:string, i:number) => i != userLikeIndex);
+
+      console.log("likesList: ",updatedLikesList);
+
+      this.firebase.updateDocument(`Posts/`,postId, {likes: updatedLikesList});
     }
     else{
-      this.firebase.updateDocument(`Posts/`,postId, currentLikes.push(userId));
+      //Adicionando o usuario na lista de likes
+      let updatedLikesList = [...currentLikes, userId];
+
+      this.firebase.updateDocument(`Posts/`,postId, {likes: updatedLikesList});
     }
 
   }
@@ -56,10 +66,16 @@ export class RatingService {
     let userLikeIndex:number = currentLikes.findIndex(x=>x === userId)
 
     if(userLikeIndex != -1){
-      this.firebase.updateDocument(`Posts/${postId}/comments`, commentId, currentLikes.map((v:string, i:number) => i != userLikeIndex));
+      //Removendo o usuario da lista de likes
+      let updatedLikesList = currentLikes.filter((value:string, i:number) => i != userLikeIndex);
+
+      this.firebase.updateDocument(`Posts/${postId}/comments`, commentId, {likes: updatedLikesList});
     }
     else{
-      this.firebase.updateDocument(`Posts/${postId}/comments`, commentId, currentLikes.push(userId));
+      //Adicionando o usuario na lista de likes
+      let updatedLikesList = [...currentLikes, userId];
+
+      this.firebase.updateDocument(`Posts/${postId}/comments`, commentId, {likes: updatedLikesList});
     }
     
     // this.firebase.createDocument(`Posts/${postId}/comments/${commentId}/likes`, new Like(userId));
