@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Post } from '../model/post';
 import { FirebaseService } from './firebase.service';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,14 +12,16 @@ export class PostService implements OnDestroy{
   private sharedPost!: Post;
   public postList!: Array<Post>;
   public trendPostsList!: Array<Post>;
+  public postsList$!: Observable<Array<Post>>;
   public postSubscriptions!: Subscription;
   
   constructor(private firebase: FirebaseService, private router: Router) { }
 
-  mapPosts(datas:any[]){
+  mapPosts(datas:any[])
+  {
     let postsArray:Array<Post> = new Array<Post>();
 
-    datas.forEach((data)=>{
+    datas.forEach((data) => {
       let postDTO:Post = {
         id: data.id.toString(),
         title: data.title,
@@ -28,49 +30,50 @@ export class PostService implements OnDestroy{
         bannerUrl: data.bannerUrl,
         author: {...data.author},
         likes: data.likes,
-        datehour: new Date(data['datehour']['seconds']*1000).toLocaleString()
+        datehour: new Date(data['datehour']['seconds']*1000).toLocaleString(),
+        tag: data.tag
       } 
+
       postsArray.push(postDTO)
     })
 
     return postsArray;
   }
 
-  async getPosts(){
-    
-    this.postSubscriptions = this.firebase.getSnapshotDocuments("Posts").subscribe(
-      {
-        next: (result) => {
-          this.postList = this.mapPosts(result);
-          console.log(result);
-        },
-        error: (err)=>console.log(err)
-      }
-    )
+  getPosts():Observable<any[]>
+  {
+    // this.postSubscriptions = this.firebase.getSnapshotDocuments("Posts").subscribe(
+    //   {
+    //     next: (result) => {
+    //       this.postList = this.mapPosts(result);
+    //       console.log(result);
+    //     },
+    //     error: (err)=>console.log(err)
+    //   }
+    // )
 
-    return this.postSubscriptions;
-    
-    // let postsArray = res.map((value)=>{
-    //   return new Post().assign(value);
-    // })
+    this.postsList$ = this.firebase.getSnapshotDocuments("Posts");
 
-    // let postsArray = res as Array<Post>;
-      
-    // //Transforma o timestamp do formato firestore(presente no atributo datehour) para o datetime no formato string entendivel
-    // postsArray = postsArray.map((p:any)=>{return {...p, datehour:new Date(p['datehour']['seconds']*1000).toLocaleString()}});
+    return this.postsList$;
 
-    // this.postList = postsArray;
-    // // console.log(this.postList)
-    // return postsArray;
+    // return this.postList;  
   }
 
-  sortPosts(){
-    if(!this.postList)
+  listTrendPostsByLikes(postList:Post[])
+  {
+    if(!postList)
     {
       throw new Error("Lista de postagens indefinida!")
     }
-    this.trendPostsList = [...this.postList]
-    this.trendPostsList.sort(this.sortByLikes) //O metodo array.sort modifica o proprio array passado e retorna um ponteiro de referencia para esse array
+    this.trendPostsList = this.sortPosts(postList,this.sortByLikes);
+    console.log(this.trendPostsList)
+  }
+
+  sortPosts(postList:Post[], sortMethod:(a:Post,b:Post)=>number)
+  {
+    let trendPostsList = [...postList]
+
+    return trendPostsList.sort(sortMethod) //O metodo array.sort modifica o proprio array passado e retorna um ponteiro de referencia para esse array
   }
 
   sortByLikes(a: Post, b: Post): number {
@@ -84,10 +87,14 @@ export class PostService implements OnDestroy{
 
   openPost(postId:any, router?:Router){
     let post = this.postList.find((p)=>p.id==postId);
-    if(post){
+
+    if(post)
+    {
       this.setSharedPost(post);
+
       this.router.navigate(['/post',postId]);
-    }else{
+    }
+    else{
       throw new Error('Post não encontrado')
     }
   }

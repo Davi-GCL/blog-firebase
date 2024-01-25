@@ -34,7 +34,7 @@ export class RatingService {
 
   }
  
-  updatePostLikes(postId:string, currentLikes:Array<string>){
+  updatePostLikes(postId:string, currentLikes:Array<string>):boolean{
 
     let userId = this.firebase.user.userId;
 
@@ -49,17 +49,20 @@ export class RatingService {
       console.log("likesList: ",updatedLikesList);
 
       this.firebase.updateDocument(`Posts/`,postId, {likes: updatedLikesList});
+
+      return false;
     }
     else{
       //Adicionando o usuario na lista de likes
       let updatedLikesList = [...currentLikes, userId];
 
       this.firebase.updateDocument(`Posts/`,postId, {likes: updatedLikesList});
-    }
 
+      return true;
+    }
   }
 
-  updateCommentLikes(postId:string, commentId:string, currentLikes:Array<string>){
+  updateCommentLikes(postId:string, commentId:string, currentLikes:Array<string>):boolean{
 
     let userId = this.firebase.user.userId;
 
@@ -70,12 +73,16 @@ export class RatingService {
       let updatedLikesList = currentLikes.filter((value:string, i:number) => i != userLikeIndex);
 
       this.firebase.updateDocument(`Posts/${postId}/comments`, commentId, {likes: updatedLikesList});
+
+      return false;
     }
     else{
       //Adicionando o usuario na lista de likes
       let updatedLikesList = [...currentLikes, userId];
 
       this.firebase.updateDocument(`Posts/${postId}/comments`, commentId, {likes: updatedLikesList});
+      
+      return true;
     }
     
     // this.firebase.createDocument(`Posts/${postId}/comments/${commentId}/likes`, new Like(userId));

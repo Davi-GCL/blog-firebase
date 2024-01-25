@@ -45,7 +45,7 @@ export class FirebaseService {
 
   //Variaveis com dados do usuario:
   
-  _user: any = {
+  private _user: any = {
     userId: localStorage.getItem('userId')? localStorage.getItem('userId') : '',
     userName: localStorage.getItem('userName')? localStorage.getItem('userName') : '',
     userPhoto: localStorage.getItem('userPhoto')? localStorage.getItem('userPhoto') : ''
