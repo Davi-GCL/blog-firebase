@@ -14,11 +14,3 @@
 .publish-date{
     font-size: 12px !important;
 }
-
-.bi-star{
-    vertical-align: text-bottom !important;
-}
-.bi-star:hover::before{
-color:yellow;
-/* content: '\F586'!important; */
-}

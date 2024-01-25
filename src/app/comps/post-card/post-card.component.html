@@ -16,10 +16,7 @@
       style="overflow: hidden;">
     </div>
     <div class="card-footer d-flex justify-content-start" style="padding-block: 5px;">
-        <p class="card-text text-body-secondary">
-            <i class="bi bi-star" (click)="this.handleLike($event)"></i>
-            {{post.likes.length}}
-        </p>
+        <app-like-button [postId]="post.id" [postLikes]="post.likes"></app-like-button>
     </div>
     
 </div>

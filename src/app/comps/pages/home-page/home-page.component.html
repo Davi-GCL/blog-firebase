@@ -47,18 +47,19 @@
         </form>
         
         <div class="p-4 mb-3 bg-body-tertiary rounded">
-          <h4 class="text-body-secondary">Tags em alta:</h4>
-          <!-- <p class="mb-0">Customize this section to tell your visitors a little bit about your publication, writers, content, or something else entirely. Totally up to you.</p> -->
-          <span *ngFor="let item of postService.trendPostsList | slice:0:5">
-            <button role="button" class="btn btn-secondary me-1 mb-2" (click)="addTagSearch($event)" *ngIf="item.tag">{{item.tag}}</button>
-          </span>
-          
+          <h4 class="text-body-secondary mb-3">Tags em alta:</h4>
+
+          <div *ngIf="postService.postsList$ | async" >
+            <span *ngFor="let tPost of postService.trendPostsList | slice:0:5" >
+              <button role="button" class="btn btn-secondary me-1 mb-2" (click)="addTagSearch($event)" *ngIf="tPost.tag">{{tPost.tag}}</button>
+            </span>
+          </div>
           
         </div>
 
         <div>
           <h4 class="text-body-secondary">Posts em alta</h4>
-          <ul class="list-unstyled">
+          <ul class="list-unstyled" *ngIf="postService.postsList$ | async">
             <li *ngFor="let tPost of postService.trendPostsList | slice:0:4">
               <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" (click)="postService.openPost(tPost.id)">
                 <img src={{tPost.thumbnailUrl}} alt="" height="96">
@@ -66,7 +67,11 @@
                   <h6 class="mb-0">{{tPost.title}}</h6>
                   <p class="text-truncate m-0">{{tPost.text}}</p>
                   <small class="text-body-secondary">{{tPost.datehour}}</small>
-                  <p class="card-text align-self-end text-body-secondary" ><i class="bi bi-star"></i> <small class="likes-number">{{tPost.likes.length}}</small></p>
+                  
+                  <div class="card-footer d-flex justify-content-start">
+                    <app-like-button [postId]="tPost.id" [postLikes]="tPost.likes"></app-like-button>
+                  </div>
+
                 </div>
               </a>
             </li>

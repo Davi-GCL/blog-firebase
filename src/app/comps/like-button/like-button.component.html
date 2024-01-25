@@ -1,0 +1,5 @@
+<p class="card-text text-body-secondary">
+    <i [ngClass]="[isLiked?'bi bi-star-fill':'bi bi-star']" (click)="this.handleLike($event)"></i>
+    {{postLikes.length}}
+</p>
+

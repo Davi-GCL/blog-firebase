@@ -20,6 +20,7 @@ import { AlertMessageComponent } from './comps/alert-message/alert-message.compo
 import { AuthModalComponent } from './comps/auth-modal/auth-modal.component';
 import { CommentCardComponent } from './comps/comment-card/comment-card.component';
 import { PostCardComponent } from './comps/post-card/post-card.component';
+import { LikeButtonComponent } from './comps/like-button/like-button.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { PostCardComponent } from './comps/post-card/post-card.component';
     AlertMessageComponent,
     AuthModalComponent,
     CommentCardComponent,
-    PostCardComponent
+    PostCardComponent,
+    LikeButtonComponent
   ],
   imports: [
     BrowserModule,
