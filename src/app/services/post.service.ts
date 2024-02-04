@@ -28,7 +28,7 @@ export class PostService implements OnDestroy{
         text: data.text,
         thumbnailUrl: data.thumbnailUrl,
         bannerUrl: data.bannerUrl,
-        author: {...data.author},
+        author: {userId:data.author.userId, userName: data.author.userName, userPhoto: data.author.userPhoto},
         likes: data.likes,
         datehour: new Date(data['datehour']['seconds']*1000).toLocaleString(),
         tag: data.tag

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { getDatabase, ref, onValue, set } from "firebase/database";
@@ -20,14 +20,15 @@ import {
 import { IAuthor } from '../model/iauthor';
 
 import { environment } from 'src/environments/environment';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FirebaseService {
+export class FirebaseService{
 
-  constructor() { }
+  //Variaveis com dados do usuario: 
+  user$ = new BehaviorSubject<IAuthor>({userId:'', userName:'', userPhoto:''});
 
   // Your web app's Firebase configuration
   firebaseConfig = environment.firebaseConfig;
@@ -43,28 +44,28 @@ export class FirebaseService {
   firestoreDB = getFirestore(this.app);
   storage = getStorage()
 
-  //Variaveis com dados do usuario:
-  
-  private _user: any = {
-    userId: localStorage.getItem('userId')? localStorage.getItem('userId') : '',
-    userName: localStorage.getItem('userName')? localStorage.getItem('userName') : '',
-    userPhoto: localStorage.getItem('userPhoto')? localStorage.getItem('userPhoto') : ''
-  }
-  
-  public get user() {
-    return this._user;
+  //-----------------------------------------------------
+
+  constructor() 
+  {
+    let localStorageUID = localStorage.getItem('userId');
+    let localStorageUName = localStorage.getItem('userName');
+    let localStorageUPhoto = localStorage.getItem('userPhoto');
+
+    if(localStorageUID
+      && localStorageUName
+      && localStorageUPhoto)
+    {
+      this.user$.next({userId : localStorageUID, userName: localStorageUName, userPhoto: localStorageUPhoto})
+    }
+    
+    this.user$.subscribe((value)=>{
+      localStorage.setItem('userId',value.userId);
+      localStorage.setItem('userName',value.userName);
+      localStorage.setItem('userPhoto',value.userPhoto);
+    })
   }
 
-  public set user(value:IAuthor){
-    this._user.userId = value.userId;
-    this._user.userName = value.userName;
-    this._user.userPhoto = value.userPhoto;
-
-    localStorage.setItem('userId',value.userId);
-    localStorage.setItem('userName',value.userName);
-    localStorage.setItem('userPhoto',value.userPhoto);
-  }
-  
   //-----------------------------------------------------
 
   signUpEmail(email:any, password:any, name:any, photoURL?:string){
@@ -78,7 +79,7 @@ export class FirebaseService {
         updateProfile(userCredential.user, {
           displayName: name, photoURL: "https://firebasestorage.googleapis.com/v0/b/angular-blog-d58d9.appspot.com/o/images%2Fblank-profile-picture-973460_1280.jpg?alt=media&token=00439f5f-6a73-4b19-b711-5d0b4d0ea62b"
         }).then(()=>{
-          this.user = {userId: credential.uid, userName: userCredential.user.displayName!, userPhoto:userCredential.user.photoURL!}
+          this.user$.next({userId: credential.uid, userName: userCredential.user.displayName!, userPhoto:userCredential.user.photoURL!})
         })
       }
       
@@ -95,8 +96,14 @@ export class FirebaseService {
     .then((userCredential) => {
       // Signed in 
       const credential = userCredential.user;
+
       if(credential == null){throw new Error}
-      this.user = {userId: credential.uid, userName: credential.displayName || '', userPhoto:credential.photoURL || ''}
+
+      this.user$.next( {userId: credential.uid, userName: credential.displayName || '', userPhoto:credential.photoURL || ''} )
+
+      localStorage.setItem("userId",credential.uid);
+      localStorage.setItem("userName", credential.displayName || '');
+      localStorage.setItem("userPhoto", credential.photoURL || '')
       // ...
     })
     .catch((error) => {
@@ -109,18 +116,22 @@ export class FirebaseService {
   async myloginWithGoogle():Promise<any> {
     await signInWithPopup(this.auth, this.provider)
       .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        if(credential){
-          const token = credential.accessToken;
-        }else{ throw new Error("credential null")}
-        // The signed-in user info.
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          if(credential){
+            const token = credential.accessToken;
+          }else{ throw new Error("credential null")}
+          // The signed-in user info.
 
-        const user = result.user;
+          const user = result.user;
 
-        if(user.displayName == null || user.photoURL == null){throw new Error}
+          if(user.displayName == null || user.photoURL == null){throw new Error}
+          
+          this.user$.next({userId: user.uid, userName: user.displayName, userPhoto: user.photoURL})
 
-        this.user = {userId: user.uid, userName: user.displayName, userPhoto: user.photoURL}
+          localStorage.setItem("userId",user.uid);
+          localStorage.setItem("userName", user.displayName || '');
+          localStorage.setItem("userPhoto", user.photoURL || '')
 
         console.log(user.displayName);
 
@@ -133,15 +144,15 @@ export class FirebaseService {
         // ...
       })
       .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-        throw new Error(error)
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // The email of the user's account used.
+      const email = error.customData.email;
+      // The AuthCredential type that was used.
+      const credential = GoogleAuthProvider.credentialFromError(error);
+      // ...
+      throw new Error(error)
       });
       
   }
@@ -275,7 +286,7 @@ export class FirebaseService {
 
     return await getDownloadURL(imagesRef);
     
-
+      
   }
-  
+
 }

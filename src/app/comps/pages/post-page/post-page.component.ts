@@ -9,6 +9,7 @@ import { Comment as MyComment } from 'src/app/model/comment';
 import { AlertService } from 'src/app/services/alert.service';
  
 import { RatingService } from 'src/app/services/rating.service';
+import { IAuthor } from 'src/app/model/iauthor';
 
 @Component({
   selector: 'app-post-page',
@@ -19,6 +20,7 @@ export class PostPageComponent implements OnInit{
   id:string | null = '';
   post:any;
   commentsList: Array<MyComment> = new Array<MyComment>();
+  user!:IAuthor;
 
   formComment: FormGroup = new FormGroup({
     inputComment: new FormControl('', [Validators.required])
@@ -30,10 +32,6 @@ export class PostPageComponent implements OnInit{
 
   constructor(private route: ActivatedRoute, public postService: PostService, public rateService: RatingService , private firebase: FirebaseService , public router: Router , public alertService: AlertService){}
 
-  isSigned(){
-    return this.firebase.user.userId?true:false;
-  }
-
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id')
     if(this.id){
@@ -41,6 +39,10 @@ export class PostPageComponent implements OnInit{
       
       this.rateService.getComments(this.id).then((result)=>this.commentsList = result);
     }
+
+    this.firebase.user$.subscribe((value)=>{
+      this.user = value;
+    })
   }
 
   getPost(postId:string){
@@ -72,7 +74,11 @@ export class PostPageComponent implements OnInit{
     }
   }
 
+  isSigned(){
+    return this.user.userId?true:false;
+  }
+
   isAuthor(){
-    return this.post.author.userId == this.firebase.user.userId;
+    return this.post.author.userId == this.user.userId;
   }
 }

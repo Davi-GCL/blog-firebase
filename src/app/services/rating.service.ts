@@ -1,14 +1,24 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { FirebaseService } from './firebase.service';
 import { Comment as MyComment } from 'src/app/model/comment';
+import { IAuthor } from '../model/iauthor';
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class RatingService {
+export class RatingService implements OnInit{
 
-  constructor(private firebase:FirebaseService) { }
+  public user!: IAuthor;
+
+  constructor(private firebase:FirebaseService) 
+  {
+    this.firebase.user$.subscribe((value) => { this.user = value ; console.log("Usuario reconhecido em rating service")})
+  }
+
+  ngOnInit(): void {
+      
+  }
 
   async getComments(postId:string): Promise<MyComment[]>{
     let res = await this.firebase.getDocuments(`Posts/${postId}/coments`);
@@ -24,7 +34,7 @@ export class RatingService {
   }
 
   async uploadComment(postId:string, commentary:any){
-    let newComment = new MyComment(this.firebase.user, commentary, new Date())
+    let newComment = new MyComment(this.user, commentary, new Date())
 
     await this.firebase.createDocument(`Posts/${postId}/coments`,{...newComment});
     
@@ -36,7 +46,7 @@ export class RatingService {
  
   updatePostLikes(postId:string, currentLikes:Array<string>):boolean{
 
-    let userId = this.firebase.user.userId;
+    let userId = this.user.userId;
 
     if(!userId) throw new Error("ID de usuario nulo!")
 
@@ -64,7 +74,7 @@ export class RatingService {
 
   updateCommentLikes(postId:string, commentId:string, currentLikes:Array<string>):boolean{
 
-    let userId = this.firebase.user.userId;
+    let userId = this.user.userId;
 
     let userLikeIndex:number = currentLikes.findIndex(x=>x === userId)
 

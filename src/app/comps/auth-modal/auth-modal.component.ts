@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FirebaseService } from 'src/app/services/firebase.service';
 
@@ -8,15 +8,12 @@ import { FirebaseService } from 'src/app/services/firebase.service';
   styleUrls: ['./auth-modal.component.css']
 })
 export class AuthModalComponent {
-  userId:string | null = null;
 
-  constructor(public firebase: FirebaseService){
-    this.userId = localStorage.getItem('userId');
-  }
+  constructor(public firebase: FirebaseService){}
 
   async loginGoogle(){
     try {
-      await this.firebase.myloginWithGoogle().then(res => this.userId = this.firebase.user.userId);
+      await this.firebase.myloginWithGoogle().then();
       // console.log("seu nome: "+ this.firebase.userName);
     } catch (error) {
       console.log(error)

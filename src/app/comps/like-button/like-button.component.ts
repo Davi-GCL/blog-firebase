@@ -10,7 +10,7 @@ import { RatingService } from 'src/app/services/rating.service';
 })
 export class LikeButtonComponent implements OnInit{
   
-  private readonly userId!:string;
+  private userId!:string | null;
   
   isLiked!:boolean;
 
@@ -22,12 +22,17 @@ export class LikeButtonComponent implements OnInit{
 
   constructor(public ratingService: RatingService, private firebaseService: FirebaseService, public alertService:AlertService)
   {
-    this.userId = this.firebaseService.user.userId;
+    
   }
 
   ngOnInit(): void {
+
+    this.firebaseService.user$.subscribe(value => {
+      this.userId = value.userId
+      
+      this.isLiked = this.verifyThisUserLike();
+    })
     
-    this.isLiked = this.verifyThisUserLike();
   }
 
   verifyThisUserLike():boolean{
