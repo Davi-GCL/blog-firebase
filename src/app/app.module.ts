@@ -21,6 +21,7 @@ import { AuthModalComponent } from './comps/auth-modal/auth-modal.component';
 import { CommentCardComponent } from './comps/comment-card/comment-card.component';
 import { PostCardComponent } from './comps/post-card/post-card.component';
 import { LikeButtonComponent } from './comps/like-button/like-button.component';
+import { LoadingMessageComponent } from './comps/loading-message/loading-message.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { LikeButtonComponent } from './comps/like-button/like-button.component';
     AuthModalComponent,
     CommentCardComponent,
     PostCardComponent,
-    LikeButtonComponent
+    LikeButtonComponent,
+    LoadingMessageComponent
   ],
   imports: [
     BrowserModule,
