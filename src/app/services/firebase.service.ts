@@ -92,24 +92,25 @@ export class FirebaseService{
   }
 
   async signInEmail(email:any, password:any){
-    signInWithEmailAndPassword(this.auth, email, password)
+    return signInWithEmailAndPassword(this.auth, email, password)
     .then((userCredential) => {
       // Signed in 
       const credential = userCredential.user;
 
-      if(credential == null){throw new Error}
-
+      if(credential == null){throw new Error("credential not found")}
+      // localStorage.setItem("userId",credential.uid);
+      // localStorage.setItem("userName", credential.displayName || '');
+      // localStorage.setItem("userPhoto", credential.photoURL || '')
+      
       this.user$.next( {userId: credential.uid, userName: credential.displayName || '', userPhoto:credential.photoURL || ''} )
-
-      localStorage.setItem("userId",credential.uid);
-      localStorage.setItem("userName", credential.displayName || '');
-      localStorage.setItem("userPhoto", credential.photoURL || '')
-      // ...
+      return {userId: credential.uid, userName: credential.displayName || '', userPhoto:credential.photoURL || ''}
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
       console.error(errorMessage)
+
+      throw new Error(errorCode + errorMessage)
     });
   }
 
