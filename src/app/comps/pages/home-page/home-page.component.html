@@ -33,7 +33,14 @@
 
           <!-- <hr> -->
 
-      <app-post-card *ngFor="let post of postService.postList|filter:search" [postContent]="post"></app-post-card>
+      <ng-container *ngIf="postService.postsList$ | async; else loading">
+        <app-post-card *ngFor="let post of postService.postList | filter:search" [postContent]="post"></app-post-card>  
+      </ng-container>
+      <ng-template #loading>
+        <app-loading-message variant="spinner-grow" colorClass="text-primary">
+            <h5 class="loading-message text-primary">Carregando publicações...</h5>
+        </app-loading-message>
+      </ng-template>
     </div>
 
 <!-- ASIDE ------------------------------------------------------------------------  -->

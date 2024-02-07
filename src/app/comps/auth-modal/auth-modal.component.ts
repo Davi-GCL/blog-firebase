@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AlertService } from 'src/app/services/alert.service';
 import { FirebaseService } from 'src/app/services/firebase.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { FirebaseService } from 'src/app/services/firebase.service';
 })
 export class AuthModalComponent {
 
-  constructor(public firebase: FirebaseService){}
+  constructor(public firebase: FirebaseService, public alertService: AlertService){}
 
   async loginGoogle(){
     try {
@@ -55,7 +56,11 @@ export class AuthModalComponent {
 
   loginEmail(){
     if(this.formLogin.controls.email.valid && this.formLogin.controls.password.valid){
-      this.firebase.signInEmail(this.formLogin.controls.email.value, this.formLogin.controls.password.value);
+      this.firebase.signInEmail(this.formLogin.controls.email.value, this.formLogin.controls.password.value)
+      .then((userInfo)=>{
+        this.alertService.add("Login efetuado!","Bem-vindo de volta "+userInfo.userName, "success")
+      })
+      .catch((error)=>console.error(error))
     }else{
       throw new Error("erro no login")
     }

@@ -16,7 +16,7 @@ import { EditPostComponent } from './comps/pages/edit-post/edit-post.component';
 import { FilterPipe } from './filter.pipe';
 import { AboutPageComponent } from './comps/pages/about-page/about-page.component';
 import { FormFilterComponent } from './comps/form-filter/form-filter.component';
-import { AlertMessageComponent } from './comps/alert-message/alert-message.component';
+import { AlertGroupComponent } from './comps/alert-group/alert-group.component';
 import { AuthModalComponent } from './comps/auth-modal/auth-modal.component';
 import { CommentCardComponent } from './comps/comment-card/comment-card.component';
 import { PostCardComponent } from './comps/post-card/post-card.component';
@@ -37,7 +37,7 @@ import { LoadingMessageComponent } from './comps/loading-message/loading-message
     FilterPipe,
     AboutPageComponent,
     FormFilterComponent,
-    AlertMessageComponent,
+    AlertGroupComponent,
     AuthModalComponent,
     CommentCardComponent,
     PostCardComponent,

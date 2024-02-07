@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Post } from 'src/app/model/post';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { FormCreatePostComponent } from '../../form-create-post/form-create-post.component';
+import { IAuthor } from 'src/app/model/iauthor';
 
 @Component({
   selector: 'app-edit-post',
@@ -17,10 +18,15 @@ export class EditPostComponent implements OnInit, AfterViewChecked {
   postID:any = "";
   post!:Post;  
   formPost!: FormGroup;
+  user!:IAuthor
 
   constructor(public firebase: FirebaseService , public router: Router, private route: ActivatedRoute){}
 
   ngOnInit(): void {
+    this.firebase.user$.subscribe((value)=>{
+      this.user = value;
+    })
+
     this.postID = this.route.snapshot.paramMap.get('id')
     if(!this.postID){
       throw new Error('Erro ao buscar o id na url')
@@ -60,11 +66,15 @@ export class EditPostComponent implements OnInit, AfterViewChecked {
   }
   
   updatePost(){
-    this.firebase.updateDocument("Posts",this.postID,{content:"A lição do rato",likes:100})
+    this.firebase.updateDocument("Posts",this.postID,{
+      title: this.formComp.formPost.controls['title'].value, 
+      content: this.formComp.formPost.controls['text'].value, 
+      tag: this.formComp.formPost.controls['tag'].value
+    })
   }
 
   authorize(){
-    if(this.post.author.userId != this.firebase.user.userId){
+    if(this.post.author.userId != this.user.userId){
       alert("Só o autor do post pode editá-lo")
       this.router.navigate(['/post',this.postID]);
     }

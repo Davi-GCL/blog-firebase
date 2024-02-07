@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AlertMessageComponent } from './alert-message.component';
+import { AlertGroupComponent } from './alert-group.component';
 
 describe('AlertMessageComponent', () => {
-  let component: AlertMessageComponent;
-  let fixture: ComponentFixture<AlertMessageComponent>;
+  let component: AlertGroupComponent;
+  let fixture: ComponentFixture<AlertGroupComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AlertMessageComponent]
+      declarations: [AlertGroupComponent]
     });
-    fixture = TestBed.createComponent(AlertMessageComponent);
+    fixture = TestBed.createComponent(AlertGroupComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

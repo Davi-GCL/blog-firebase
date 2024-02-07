@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Post } from 'src/app/model/post';
 import { FirebaseService } from 'src/app/services/firebase.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PostService } from 'src/app/services/post.service';
 import { FormControl, FormGroup } from '@angular/forms';
-import { tap, map, Observable } from 'rxjs';
+import { tap, map, Observable, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-home-page',
@@ -24,19 +24,23 @@ export class HomePageComponent implements OnInit, OnDestroy{
     return '';
   }
 
-  constructor(public postService:PostService , private router: Router){}
+  constructor(public postService:PostService , private router: Router, private activatedRoute: ActivatedRoute)
+  {
+    // this.activatedRoute.queryParams.subscribe((result)=>{
+    //   this.searchParam = result['tag']
+    // })
+
+  }
 
   ngOnInit(): void {
-    this.postService.postSubscriptions = this.postService.getPosts()
+    this.postService.postSubscriptions = this.postService.getPostsObservable()
+    .pipe(map(this.postService.mapPosts))
     .subscribe(
         {
           next: (result) => {
-            let aux = this.postService.mapPosts(result);
-
-            this.postService.postList = aux;
+            this.postService.postList = result;
 
             this.postService.listTrendPostsByLikes(this.postService.postList);
-            
             
             console.log(this.postService.trendPostsList);
           },
