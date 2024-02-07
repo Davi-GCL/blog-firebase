@@ -40,7 +40,7 @@ export class PostService implements OnDestroy{
     return postsArray;
   }
 
-  getPosts():Observable<any[]>
+  getPostsObservable():Observable<any[]>
   {
     // this.postSubscriptions = this.firebase.getSnapshotDocuments("Posts").subscribe(
     //   {
