@@ -1,10 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Post } from 'src/app/model/post';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PostService } from 'src/app/services/post.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { tap, map, Observable, switchMap } from 'rxjs';
+import { AsideContentComponent } from '../../aside-content/aside-content.component';
+
 
 @Component({
   selector: 'app-home-page',
@@ -13,13 +15,15 @@ import { tap, map, Observable, switchMap } from 'rxjs';
 })
 export class HomePageComponent implements OnInit, OnDestroy{
 
-  searchForm = new FormGroup({
-    search: new FormControl('')
-  });
+  @ViewChild('asideContentLG', {static:false}) asideContentLG!: AsideContentComponent;
+  @ViewChild('asideContentSM', {static:false}) asideContentSM!: AsideContentComponent;
 
   get search(){
-    if(this.searchForm.controls.search.value){
-      return this.searchForm.controls.search.value;
+    if(this.asideContentLG.searchForm.controls.search.value){
+      return this.asideContentLG.searchForm.controls.search.value;
+    }
+    if(this.asideContentSM.searchForm.controls.search.value){
+      return this.asideContentSM.searchForm.controls.search.value;
     }
     return '';
   }
@@ -57,7 +61,4 @@ export class HomePageComponent implements OnInit, OnDestroy{
     return array.reduce((pre:string,current:string)=>pre+' '+current)
   }
 
-  addTagSearch(event:any){
-    this.searchForm.controls.search.setValue("tag:"+event.target.innerText)
-  }
 }
