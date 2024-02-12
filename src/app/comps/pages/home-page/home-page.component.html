@@ -44,49 +44,26 @@
     </div>
 
 <!-- ASIDE ------------------------------------------------------------------------  -->
-
-    <div class="col-md-4">
-      <div class="position-sticky border rounded-2 p-3" style="top: 5rem;">
-
-        <form class="input-box mb-4" [formGroup]="searchForm">
-          <input type="text" class="form-control" formControlName="search" name="search">
-          <i class="bi bi-search"></i>                    
-        </form>
-        
-        <div class="p-4 mb-3 bg-body-tertiary rounded">
-          <h4 class="text-body-secondary mb-3">Tags em alta:</h4>
-
-          <div *ngIf="postService.postsList$ | async" >
-            <span *ngFor="let tPost of postService.trendPostsList | slice:0:5" >
-              <button role="button" class="btn btn-secondary me-1 mb-2" (click)="addTagSearch($event)" *ngIf="tPost.tag">{{tPost.tag}}</button>
-            </span>
+    <button type="button" id="aside-toggle" class="btn btn-primary rounded-end-0" data-bs-toggle="modal" data-bs-target="#asideModal">
+      <i class="bi bi-search"></i>
+    </button>
+    
+    <div id="asideModal" class="modal fade" aria-hidden="true" style="padding-inline: 3vw;">
+      <div class="modal-dialog modal-dialog-scrollable" >
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          
+          <div class="modal-body">
+            <app-aside-content #asideContentSM></app-aside-content>
+          </div>
         </div>
+      </div>
+    </div>
 
-        <div>
-          <h4 class="text-body-secondary">Posts em alta</h4>
-          <ul class="list-unstyled" *ngIf="postService.postsList$ | async">
-            <li *ngFor="let tPost of postService.trendPostsList | slice:0:4">
-              <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" (click)="postService.openPost(tPost.id)">
-                <img src={{tPost.thumbnailUrl}} alt="" height="96">
-                <div class="col-lg-8" style="max-width: 100%;">
-                  <h6 class="mb-0">{{tPost.title}}</h6>
-                  <p class="text-truncate m-0">{{tPost.text}}</p>
-                  <small class="text-body-secondary">{{tPost.datehour}}</small>
-                  
-                  <div class="card-footer d-flex justify-content-start">
-                    <app-like-button [postId]="tPost.id" [postLikes]="tPost.likes"></app-like-button>
-                  </div>
-
-                </div>
-              </a>
-            </li>
-  
-          </ul>
-        </div>
-
-        
+    <div class="col-md-4" id="aside-menu">
+      <div class="position-sticky border rounded-2 p-3" style="top: 5rem;">
+        <app-aside-content #asideContentLG></app-aside-content>
       </div>
     </div>
   <!-- \ASIDE ------------------------------------------------------------------------  -->  

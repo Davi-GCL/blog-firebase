@@ -22,3 +22,26 @@
   box-shadow: none;
   border-color: #eee;
 }
+
+#aside-toggle{
+  position: fixed !important;
+  right: 0;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.75rem;
+
+  visibility: hidden;
+}
+
+
+@media screen and (max-width: 767px){
+  #aside-toggle{
+    visibility: visible !important;
+  }
+  #aside-menu{
+    display: none !important;
+  }
+}

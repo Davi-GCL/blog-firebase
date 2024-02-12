@@ -22,6 +22,7 @@ import { CommentCardComponent } from './comps/comment-card/comment-card.componen
 import { PostCardComponent } from './comps/post-card/post-card.component';
 import { LikeButtonComponent } from './comps/like-button/like-button.component';
 import { LoadingMessageComponent } from './comps/loading-message/loading-message.component';
+import { AsideContentComponent } from './comps/aside-content/aside-content.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { LoadingMessageComponent } from './comps/loading-message/loading-message
     CommentCardComponent,
     PostCardComponent,
     LikeButtonComponent,
-    LoadingMessageComponent
+    LoadingMessageComponent,
+    AsideContentComponent
   ],
   imports: [
     BrowserModule,

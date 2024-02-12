@@ -1,0 +1,22 @@
+.input-box{
+    position: relative;
+  }
+  
+.input-box i {
+  position: absolute;
+  right: 13px;
+  top:18%;
+  color:#ced4da;
+
+}
+
+.form-control{
+
+  background-color:#eeeeee69;
+}
+
+.form-control:focus{
+  background-color: #eeeeee69;
+  box-shadow: none;
+  border-color: #eee;
+}

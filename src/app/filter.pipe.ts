@@ -28,7 +28,7 @@ export class FilterPipe implements PipeTransform {
       }
       return resultData;
     }
-    else if(filterStatus.startsWith('texto:')){
+    else if(filterStatus.startsWith('texto:') || filterStatus.startsWith('conteúdo:') || filterStatus.startsWith('content:')){
       //Poesquisa por conteudo
       let searchValue = filterStatus.replace('texto:','')
       // console.log("searchValue:" + searchValue)
