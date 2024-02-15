@@ -7,12 +7,17 @@ import { InputImageComponent } from '../input-image/input-image.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { Router } from '@angular/router';
 
+import { environment } from 'src/environments/environment';
+
 @Component({
   selector: 'app-form-create-post',
   templateUrl: './form-create-post.component.html',
   styleUrls: ['./form-create-post.component.css']
 })
 export class FormCreatePostComponent implements OnInit{
+  siteKey!: string;
+  captcha!: string | null;
+
   //O ! Sinaliza que o formulario será inicializado depois de sua declaração
   Url:any; 
   formPost!: FormGroup;
@@ -24,7 +29,10 @@ export class FormCreatePostComponent implements OnInit{
   @ViewChild('uploadThumb') uploadThumbnail!: InputImageComponent;
   @ViewChild('uploadBanner') uploadBanner!: InputImageComponent;
   
-  constructor(private formBuilder: FormBuilder, private firebase: FirebaseService, public alertService: AlertService, private router : Router){}
+  constructor(private formBuilder: FormBuilder, private firebase: FirebaseService, public alertService: AlertService, private router : Router)
+  {
+    this.siteKey = environment.recaptcha.siteKey;
+  }
 
   ngOnInit(): void {
       this.createForm(new Post());
@@ -38,6 +46,10 @@ export class FormCreatePostComponent implements OnInit{
     return this.formPost.get('text')!;
   }
 
+  captchaResolved(captchaResponse: string | null){
+    this.captcha = captchaResponse;
+  }
+  
   createForm(newPost:Post){
     this.formPost = this.formBuilder.group({
       title: new FormControl(newPost.title, [Validators.required]),
