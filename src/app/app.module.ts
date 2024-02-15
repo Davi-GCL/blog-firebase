@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { RecaptchaModule, RecaptchaSettings } from 'ng-recaptcha';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -23,6 +24,8 @@ import { PostCardComponent } from './comps/post-card/post-card.component';
 import { LikeButtonComponent } from './comps/like-button/like-button.component';
 import { LoadingMessageComponent } from './comps/loading-message/loading-message.component';
 import { AsideContentComponent } from './comps/aside-content/aside-content.component';
+
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -50,7 +53,8 @@ import { AsideContentComponent } from './comps/aside-content/aside-content.compo
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    RecaptchaModule
   ],
   providers: [],
   bootstrap: [AppComponent]
