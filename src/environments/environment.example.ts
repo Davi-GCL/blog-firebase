@@ -8,5 +8,8 @@ export const environment = {
         storageBucket: "storageBucket",
         messagingSenderId: "messagingSenderId",
         appId: "appId"
+      },
+      recaptcha: {
+        siteKey: "yourGoogleReCaptchaPublicKey"
       }
   };
