@@ -29,7 +29,15 @@
         <form class="form-comment w-100" [formGroup]="formComment" *ngIf="this.isSigned()">
             <!-- <label for="inputComment" class="form-label">Escreva um comentário</label> -->
             <textarea type="text" class="form-control" name="inputComment" placeholder="Escreva seu comentário" formControlName="inputComment" style="height: 87px;width: 100%;"></textarea>
-            <button type="submit" class="btn btn-primary mt-2" (click)="uploadComment()">Enviar</button>
+            
+            <div class="mt-2" *ngIf="formComment.controls['inputComment'].touched">
+                <re-captcha 
+                (resolved)="captchaResolved($event)"
+                siteKey={{siteKey}}
+                required ></re-captcha>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-2" [ngClass]="{'disabled': !captcha}" (click)="uploadComment()">Enviar</button>
         </form>
 
         <div class="comment-warn" *ngIf="!this.isSigned()">

@@ -11,12 +11,17 @@ import { AlertService } from 'src/app/services/alert.service';
 import { RatingService } from 'src/app/services/rating.service';
 import { IAuthor } from 'src/app/model/iauthor';
 
+import { environment } from 'src/environments/environment';
+
 @Component({
   selector: 'app-post-page',
   templateUrl: './post-page.component.html',
   styleUrls: ['./post-page.component.css']
 })
 export class PostPageComponent implements OnInit{
+  siteKey!: string;
+  captcha!: string | null;
+
   id:string | null = '';
   post:any;
   commentsList: Array<MyComment> = new Array<MyComment>();
@@ -30,7 +35,10 @@ export class PostPageComponent implements OnInit{
     return this.formComment.controls['inputComment'].value;
   }
 
-  constructor(private route: ActivatedRoute, public postService: PostService, public rateService: RatingService , private firebase: FirebaseService , public router: Router , public alertService: AlertService){}
+  constructor(private route: ActivatedRoute, public postService: PostService, public rateService: RatingService , private firebase: FirebaseService , public router: Router , public alertService: AlertService)
+  {
+    this.siteKey = environment.recaptcha.siteKey;
+  }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id')
@@ -51,13 +59,6 @@ export class PostPageComponent implements OnInit{
     this.firebase.getDocument('Posts', postId).then((res)=>{if(res){this.post = {...res , datehour: new Date(res['datehour']['seconds']*1000).toLocaleString()}}});
   }
 
-  uploadComment()
-  {
-    if(!this.id) throw new Error("Nao foi possivel acessar o id do post para comentar");
-
-    this.rateService.uploadComment(this.id, this.commentary).then((result)=>this.commentsList = result);
-  }
-
   toEditPost(){
     this.router.navigate(['/edit-post',this.id]);
   }
@@ -72,6 +73,20 @@ export class PostPageComponent implements OnInit{
       this.router.navigate(['/'])
       this.alertService.add("Post deletado com sucesso!",`Post deletado: ${this.post.title}`)
     }
+  }
+
+  captchaResolved(captchaResponse: string){
+    this.captcha = captchaResponse;
+  }
+
+  uploadComment()
+  {
+    if(!this.id) throw new Error("Nao foi possivel acessar o id do post para comentar");
+
+    if(!this.commentary || this.commentary == ' ') throw new Error("Commentario invalido! Entrada vazia");
+
+    this.rateService.uploadComment(this.id, this.commentary).then((result)=>this.commentsList = result);
+    
   }
 
   isSigned(){
