@@ -1,2 +1,10 @@
-<button class="btn btn-primary" *ngIf="!userId" (click)="loginGoogle()">Login google</button>
+<!-- <button class="btn btn-primary" *ngIf="!userId" (click)="loginGoogle()">Login google</button>
+<button class="btn btn-primary" *ngIf="userId" (click)="logoutGoogle()">Logout</button> -->
+
+<!-- Button trigger modal -->
+  
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" *ngIf="!userId">
+  Login
+</button>
+
 <button class="btn btn-primary" *ngIf="userId" (click)="logoutGoogle()">Logout</button>

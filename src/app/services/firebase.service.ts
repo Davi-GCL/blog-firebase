@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { getDatabase, ref, onValue, set } from "firebase/database";
-import { getFirestore, doc, setDoc, getDocs, addDoc, collection, updateDoc, serverTimestamp, query, orderBy, where, getDoc } from "firebase/firestore"
+import { getFirestore, doc, setDoc, getDocs, addDoc, collection, updateDoc, serverTimestamp, query, orderBy, where, getDoc, deleteDoc, DocumentReference, WhereFilterOp,  onSnapshot, QuerySnapshot } from "firebase/firestore"
 
 import { getDownloadURL, getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
 
@@ -12,28 +12,26 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   signOut,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile
 } from 'firebase/auth';
+
 import { IAuthor } from '../model/iauthor';
 
-
+import { environment } from 'src/environments/environment';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FirebaseService {
+export class FirebaseService{
 
-  constructor() { }
+  //Variaveis com dados do usuario: 
+  user$ = new BehaviorSubject<IAuthor>({userId:'', userName:'', userPhoto:''});
 
   // Your web app's Firebase configuration
-  firebaseConfig = {
-    apiKey: "AIzaSyBNselSlIxZRkBOc6j5nF53CELVTCAXWQE",
-    authDomain: "angular-blog-d58d9.firebaseapp.com",
-    databaseURL: "https://angular-blog-d58d9-default-rtdb.firebaseio.com",
-    projectId: "angular-blog-d58d9",
-    storageBucket: "angular-blog-d58d9.appspot.com",
-    messagingSenderId: "777260546336",
-    appId: "1:777260546336:web:661f58bd09d190c50cbf45"
-  };
+  firebaseConfig = environment.firebaseConfig;
 
   // Initialize Firebase
   app = initializeApp(this.firebaseConfig);
@@ -46,45 +44,95 @@ export class FirebaseService {
   firestoreDB = getFirestore(this.app);
   storage = getStorage()
 
-  //Variaveis com dados do usuario:
-  
-  _user: any = {
-    userId: localStorage.getItem('userId')? localStorage.getItem('userId') : '',
-    userName: localStorage.getItem('userName')? localStorage.getItem('userName') : '',
-    userPhoto: localStorage.getItem('userPhoto')? localStorage.getItem('userPhoto') : ''
-  }
-  
-  public get user() {
-    return this._user;
+  //-----------------------------------------------------
+
+  constructor() 
+  {
+    let localStorageUID = localStorage.getItem('userId');
+    let localStorageUName = localStorage.getItem('userName');
+    let localStorageUPhoto = localStorage.getItem('userPhoto');
+
+    if(localStorageUID
+      && localStorageUName
+      && localStorageUPhoto)
+    {
+      this.user$.next({userId : localStorageUID, userName: localStorageUName, userPhoto: localStorageUPhoto})
+    }
+    
+    this.user$.subscribe((value)=>{
+      localStorage.setItem('userId',value.userId);
+      localStorage.setItem('userName',value.userName);
+      localStorage.setItem('userPhoto',value.userPhoto);
+    })
   }
 
-  public set user(value:IAuthor){
-    this._user.userId = value.userId;
-    this._user.userName = value.userName;
-    this._user.userPhoto = value.userPhoto;
+  //-----------------------------------------------------
 
-    localStorage.setItem('userId',value.userId);
-    localStorage.setItem('userName',value.userName);
-    localStorage.setItem('userPhoto',value.userPhoto);
+  signUpEmail(email:any, password:any, name:any, photoURL?:string){
+    createUserWithEmailAndPassword(this.auth, email, password)
+    .then((userCredential) => {
+      // Signed in 
+      const credential = userCredential.user;
+
+      if(this.auth.currentUser){
+        //Após a criação de um usuario com email e senha, atualiza o perfil de usuario adicionando um nome e uma foto
+        updateProfile(userCredential.user, {
+          displayName: name, photoURL: "https://firebasestorage.googleapis.com/v0/b/angular-blog-d58d9.appspot.com/o/images%2Fblank-profile-picture-973460_1280.jpg?alt=media&token=00439f5f-6a73-4b19-b711-5d0b4d0ea62b"
+        }).then(()=>{
+          this.user$.next({userId: credential.uid, userName: userCredential.user.displayName!, userPhoto:userCredential.user.photoURL!})
+        })
+      }
+      
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // ..
+    });
   }
-  
-  //------------------------------
+
+  async signInEmail(email:any, password:any){
+    return signInWithEmailAndPassword(this.auth, email, password)
+    .then((userCredential) => {
+      // Signed in 
+      const credential = userCredential.user;
+
+      if(credential == null){throw new Error("credential not found")}
+      // localStorage.setItem("userId",credential.uid);
+      // localStorage.setItem("userName", credential.displayName || '');
+      // localStorage.setItem("userPhoto", credential.photoURL || '')
+      
+      this.user$.next( {userId: credential.uid, userName: credential.displayName || '', userPhoto:credential.photoURL || ''} )
+      return {userId: credential.uid, userName: credential.displayName || '', userPhoto:credential.photoURL || ''}
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.error(errorMessage)
+
+      throw new Error(errorCode + errorMessage)
+    });
+  }
 
   async myloginWithGoogle():Promise<any> {
     await signInWithPopup(this.auth, this.provider)
       .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        if(credential){
-          const token = credential.accessToken;
-        }else{ throw new Error("credential null")}
-        // The signed-in user info.
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          if(credential){
+            const token = credential.accessToken;
+          }else{ throw new Error("credential null")}
+          // The signed-in user info.
 
-        const user = result.user;
+          const user = result.user;
 
-        if(user.displayName == null || user.photoURL == null){throw new Error}
+          if(user.displayName == null || user.photoURL == null){throw new Error}
+          
+          this.user$.next({userId: user.uid, userName: user.displayName, userPhoto: user.photoURL})
 
-        this.user = {userId: user.uid, userName: user.displayName, userPhoto: user.photoURL}
+          localStorage.setItem("userId",user.uid);
+          localStorage.setItem("userName", user.displayName || '');
+          localStorage.setItem("userPhoto", user.photoURL || '')
 
         console.log(user.displayName);
 
@@ -97,15 +145,15 @@ export class FirebaseService {
         // ...
       })
       .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-        throw new Error(error)
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // The email of the user's account used.
+      const email = error.customData.email;
+      // The AuthCredential type that was used.
+      const credential = GoogleAuthProvider.credentialFromError(error);
+      // ...
+      throw new Error(error)
       });
       
   }
@@ -148,33 +196,76 @@ export class FirebaseService {
   //   });
   // }
 
-//Metodos do Firestore database: 
+//Metodos do Firestore database:
+
+  getSnapshotDocuments(collectionName:string){
+    const collectionRef = collection(this.firestoreDB, collectionName);
+
+    const q = query(collectionRef, orderBy("datehour", "desc"));
+
+    return new Observable<any[]>((observer) => {
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const docsContent:any[] = [];
+
+        querySnapshot.forEach((doc) => {
+          docsContent.push({...doc.data(), id: doc.id});
+        });
+
+        observer.next(docsContent);
+      }, (error) => {
+        observer.error(error);
+      });
+
+    });
+  }
 
   async getDocuments(collectionName:string){
     const collectionRef = collection(this.firestoreDB, collectionName);
-    let docArray = await getDocs(collectionRef);
+
+    // let docArray = await getDocs(collectionRef);
+
+    //Faz uma consulta no banco de dados, ordenando os dados com base no campo datehour em ordem decrescente
+    const q = query(collectionRef, orderBy("datehour", "desc"))
+    let docArray = await getDocs(q);
 
     //Puxa e retorna os campos presentes nesse documento
     return docArray.docs.map((doc)=>({ ...doc.data(), id: doc.id}));
   }
 
   async getDocument(collectionName:string, docId:string){
-    const collectionRef = collection(this.firestoreDB, collectionName);
+    // const collectionRef = collection(this.firestoreDB, collectionName);
     
     return (await getDoc(doc(this.firestoreDB, collectionName, docId))).data();
   }
 
-  async createDocument(collectionName:string, data:any){
+  async getDocumentsWhere(collectionPath:string, whereProperty:string, whereFilterOp:WhereFilterOp, whereValue:any):Promise<any>
+  {
+    const collectionRef = collection(this.firestoreDB, collectionPath);
+
+    let q = query(collectionRef, where(whereProperty, whereFilterOp, whereValue));
+
+    return await getDocs(q);
+  }
+
+  async createDocument(collectionName:string, data:any): Promise<DocumentReference>{
     //Cria um documento (registro/linha) na coleção(tabela) informada
     const docRef = await addDoc(collection(this.firestoreDB, collectionName), data);
+    
     console.log("Document written with ID: ", docRef.id);
+
+    return docRef;
   }
 
   async updateDocument(collectionName:string , docName:string, updateObj:any){
     const docRef = doc(this.firestoreDB, collectionName, docName);
 
     //Atualiza apenas os campos passados
-    await updateDoc(docRef, {...updateObj , datehour: serverTimestamp()});
+    // return await updateDoc(docRef, {...updateObj , datehour: serverTimestamp()});
+    return await updateDoc(docRef, {...updateObj});
+  }
+
+  async deleteDocument(collectionName:string, docName:string){
+    return await deleteDoc(doc(this.firestoreDB, collectionName, docName));
   }
 
 
@@ -196,6 +287,7 @@ export class FirebaseService {
 
     return await getDownloadURL(imagesRef);
     
-
+      
   }
+
 }

@@ -9,8 +9,19 @@
     <app-input-image #uploadThumb [destinationFolder]="'thumbnails'"></app-input-image>
     <app-input-image #uploadBanner [destinationFolder]="'banners'"></app-input-image>
 
-    <button type="submit" class="btn btn-primary">Publicar</button>
-    <small *ngIf="title.invalid && formDir.touched">Um titulo é obrigatorio</small>
+    <input type="text" class="form-control mb-3" formControlName="tag" name="tag" id="inputTag" placeholder="tag" style="max-width: 200px;">
+
+    <div class="mb-3">
+        <re-captcha 
+        (resolved)="captchaResolved($event)"
+        siteKey={{siteKey}}
+        required ></re-captcha>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [ngClass]="{'disabled': !captcha}">Publicar</button>
+
+    <small class="ms-3 text-danger" *ngIf="title.invalid && formDir.touched">O titulo é obrigatório</small>
+    <small class="ms-3 text-danger" *ngIf="text.invalid && formDir.touched">O texto é obrigatório</small>
 </form>
 
 

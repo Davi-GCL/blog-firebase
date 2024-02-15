@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500&family=Roboto:wght@500&display=swap');
+
+.navbar-brand{
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 0.5px;
+}
+
+.router-link-active{
+    font-weight: 500;
+}

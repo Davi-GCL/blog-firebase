@@ -1,0 +1,10 @@
+.bi-star{
+    vertical-align: text-bottom !important;
+}
+.bi-star:hover::before{
+    content: "\f55c"!important;
+}
+
+.bi-star-fill{
+    vertical-align: text-bottom !important;
+}

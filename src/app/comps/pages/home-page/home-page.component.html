@@ -1,9 +1,12 @@
 <div class="container mt-5 p-4">
-    <div class="posts">
+  <div class="row g-5">
+  
+    <div class="posts align-items-start col-md-8">
+
         <!-- <div class="card mb-3" style="max-width: 540px;" *ngFor="let post of postList" (click)="openPost(post.id)" id="post.id">
             <div class="row g-0">           
               <div class="col-md-8">
-                <!-- <div class="card-header d-flex align-items-center">
+                <div class="card-header d-flex align-items-center">
                   <img src={{post.author.userPhoto}}  class="rounded-2" style="height: 2rem;">
                   <h6 class="p-0 m-0">{{post.author.userName}}</h6>
                 </div> -->
@@ -30,28 +33,41 @@
 
           <!-- <hr> -->
 
-          <div class="card post-card mb-4" *ngFor="let post of postList" style="max-width: 540px;" id="post.id">
-            <div class="card-body d-flex align-items-start" (click)="openPost(post.id)">
-                <img src={{post.author.userPhoto}} alt="user photo" class="img-fluid author-avatar rounded-2" style="height: 2.75rem;">
-                <div class='text-start ms-3'>
-                    <span class="d-flex align-items-baseline justify-content-between">
-                        <h6 class="mb-0 pb-1 me-3">{{post.author.userName}}</h6>
-                        <small class="text-body-secondary" style="font-size: 12px;">{{post.datehour}}</small>
-                    </span>
-                    <hr class="my-1 py-1">
-                    <h5 class="card-title">{{post.title}}</h5>
-                    <p class="card-text">{{post.text.slice(0,120)+'...'}}</p>
-                </div>
-            </div>
-            <div class="col-md-4 w-100 " style="overflow: hidden; max-height: 250px; width: 540px;">
-              <img src={{post.bannerUrl}} class="img-fluid post-image w-100" alt="Post image"
-              style="overflow: hidden;">
-            </div>
-            <div class="card-footer d-flex justify-content-end" style="padding-block: 5px;">
-                <p class="card-text align-self-end"><small class="text-body-secondary"><i class="bi bi-star"></i> {{post.likes}}</small></p>
-            </div>
-            
-        </div>
+      <ng-container *ngIf="postService.postsList$ | async; else loading">
+        <app-post-card *ngFor="let post of postService.postList | filter:search" [postContent]="post"></app-post-card>  
+      </ng-container>
+      <ng-template #loading>
+        <app-loading-message variant="spinner-grow" colorClass="text-primary">
+            <h5 class="loading-message text-primary">Carregando publicações...</h5>
+        </app-loading-message>
+      </ng-template>
     </div>
+
+<!-- ASIDE ------------------------------------------------------------------------  -->
+    <button type="button" id="aside-toggle" class="btn btn-primary rounded-end-0" data-bs-toggle="modal" data-bs-target="#asideModal">
+      <i class="bi bi-search"></i>
+    </button>
+    
+    <div id="asideModal" class="modal fade" aria-hidden="true" style="padding-inline: 3vw;">
+      <div class="modal-dialog modal-dialog-scrollable" >
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <app-aside-content #asideContentSM></app-aside-content>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4" id="aside-menu">
+      <div class="position-sticky border rounded-2 p-3" style="top: 5rem;">
+        <app-aside-content #asideContentLG></app-aside-content>
+      </div>
+    </div>
+  <!-- \ASIDE ------------------------------------------------------------------------  -->  
+ </div>
+
 </div>
 <!-- text-truncate -->

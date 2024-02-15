@@ -28,7 +28,7 @@ export class InputImageComponent {
 
   async onSubmit(): Promise<any> {
     let folder = this.destinationFolder;
-    let result = 'Nulo'
+    let result:any = null
     // event.preventDefault();
     if (this.selectedFile) {
       let imageUrl = await this.firebase.uploadToStorage(`images/${folder}`,this.selectedFile)

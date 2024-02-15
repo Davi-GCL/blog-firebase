@@ -1,0 +1,10 @@
+.comment-avatar{
+    height: 3rem;
+}
+
+.comment-card{
+    /* max-width: 100%; */
+    /* width: fit-content; */
+    box-sizing: border-box;
+    width: 100%;
+}

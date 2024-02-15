@@ -1,20 +1,21 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary rounded fixed-top" aria-label="Thirteenth navbar example">
+<nav class="navbar navbar-expand-md bg-body-tertiary rounded fixed-top" aria-label="Thirteenth navbar example">
     <div class="container-xl">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11" aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
-        <a class="navbar-brand col-lg-3 me-0" href="#">Readme.mu</a>
-        <ul class="navbar-nav col-lg-6 justify-content-lg-center">
+      <a class="navbar-brand col-md-3 me-0" [routerLink]="['/']"><i class="bi bi-file-earmark-code-fill"></i> Read<span class="text-body-secondary">us.blog</span></a>
+      
+      <div class="collapse navbar-collapse d-md-flex" id="navbarsExample11">
+        <ul class="navbar-nav col-md-6 justify-content-lg-center">
           <li class="nav-item">
-            <a class="nav-link" [routerLink]="['/']" routerLinkActive="router-link-active" >Home</a>
+            <a class="nav-link" [routerLink]="['/']" routerLinkActive="router-link-active" [routerLinkActiveOptions]="{exact:true}">| Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" [routerLink]="['/new-post']" routerLinkActive="router-link-active">Sobre nós</a>
+            <a class="nav-link" [routerLink]="['/about']" routerLinkActive="router-link-active" >| Sobre nós</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" [routerLink]="['/new-post']" routerLinkActive="router-link-active">Escrever</a>
+            <a class="nav-link" [routerLink]="['/new-post']" routerLinkActive="router-link-active">| Escrever</a>
           </li>
           <!-- <li class="nav-item">
             <a class="nav-link disabled" aria-disabled="true">Disabled</a>
@@ -28,11 +29,19 @@
             </ul>
           </li> -->
         </ul>
-        <div class="d-lg-flex col-lg-3 justify-content-lg-end">
+        <div class="d-flex col-lg-3 justify-content-lg-end align-items-center">
             <!-- <form role="search" >
               <input class="form-control" type="search" placeholder="Search" aria-label="Search" style="box-sizing: content-box;display: block;width: fit-content;">
             </form> -->
           <app-login-area></app-login-area>
+          
+          <div class="form-check form-switch ms-3 align-items-center">
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" (input)="themeSwitcher($event)">
+            <label class="form-check-label" for="flexSwitchCheckDefault"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-moon-stars-fill" viewBox="0 0 16 16">
+              <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/>
+              <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"/>
+            </svg></label>
+          </div>
         </div>
       </div>
     </div>
