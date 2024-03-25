@@ -198,10 +198,12 @@ export class FirebaseService{
 
 //Metodos do Firestore database:
 
-  getSnapshotDocuments(collectionName:string){
+  getSnapshotDocuments(collectionName:string, whereValues?:any[]){
     const collectionRef = collection(this.firestoreDB, collectionName);
 
-    const q = query(collectionRef, orderBy("datehour", "desc"));
+    let q = query(collectionRef, orderBy("datehour", "desc"));
+
+    if(whereValues) { q = query(collectionRef, orderBy("datehour", "desc"), where("isVerified", "==", true)); }
 
     return new Observable<any[]>((observer) => {
       const unsubscribe = onSnapshot(q, (querySnapshot) => {

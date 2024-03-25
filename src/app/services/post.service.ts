@@ -40,7 +40,7 @@ export class PostService implements OnDestroy{
     return postsArray;
   }
 
-  getPostsObservable():Observable<any[]>
+  getPostsObservable(whereQueryValues?:any[]):Observable<any[]>
   {
     // this.postSubscriptions = this.firebase.getSnapshotDocuments("Posts").subscribe(
     //   {
@@ -52,7 +52,7 @@ export class PostService implements OnDestroy{
     //   }
     // )
 
-    this.postsList$ = this.firebase.getSnapshotDocuments("Posts");
+    this.postsList$ = this.firebase.getSnapshotDocuments("Posts",whereQueryValues);
 
     return this.postsList$;
 
