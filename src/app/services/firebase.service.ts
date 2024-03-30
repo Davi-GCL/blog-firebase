@@ -1,7 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
-import { getDatabase, ref, onValue, set } from "firebase/database";
+import { getDatabase, ref, onValue, set, QueryConstraint } from "firebase/database";
 import { getFirestore, doc, setDoc, getDocs, addDoc, collection, updateDoc, serverTimestamp, query, orderBy, where, getDoc, deleteDoc, DocumentReference, WhereFilterOp,  onSnapshot, QuerySnapshot } from "firebase/firestore"
 
 import { getDownloadURL, getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
@@ -20,7 +20,8 @@ import {
 import { IAuthor } from '../model/iauthor';
 
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { QueryFilter } from '../model/queryFilter';
 
 @Injectable({
   providedIn: 'root'
@@ -198,27 +199,31 @@ export class FirebaseService{
 
 //Metodos do Firestore database:
 
-  getSnapshotDocuments(collectionName:string, whereValues?:any[]){
+  documentsSubject$:Subject<any[]> = new Subject<any[]>()
+
+  getSnapshotDocuments(collectionName:string, queryFilter?: QueryFilter){
     const collectionRef = collection(this.firestoreDB, collectionName);
 
     let q = query(collectionRef, orderBy("datehour", "desc"));
 
-    if(whereValues) { q = query(collectionRef, orderBy("datehour", "desc"), where("isVerified", "==", true)); }
+    if(queryFilter) 
+    { 
+      q = query(collectionRef, where(queryFilter.attributeName, "==", queryFilter.equalsValue)); 
+    }
+    
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const docsContent:any[] = [];
 
-    return new Observable<any[]>((observer) => {
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const docsContent:any[] = [];
-
-        querySnapshot.forEach((doc) => {
-          docsContent.push({...doc.data(), id: doc.id});
-        });
-
-        observer.next(docsContent);
-      }, (error) => {
-        observer.error(error);
+      querySnapshot.forEach((doc) => {
+        docsContent.push({...doc.data(), id: doc.id});
       });
-
+      console.log("novo observavel lançado: ", docsContent)
+      this.documentsSubject$.next(docsContent);
+    }, (error) => {
+      this.documentsSubject$.error(error);
     });
+
+    return this.documentsSubject$;
   }
 
   async getDocuments(collectionName:string){
@@ -227,7 +232,7 @@ export class FirebaseService{
     // let docArray = await getDocs(collectionRef);
 
     //Faz uma consulta no banco de dados, ordenando os dados com base no campo datehour em ordem decrescente
-    const q = query(collectionRef, orderBy("datehour", "desc"))
+    const q = query(collectionRef, orderBy("datehour", "desc"));
     let docArray = await getDocs(q);
 
     //Puxa e retorna os campos presentes nesse documento
