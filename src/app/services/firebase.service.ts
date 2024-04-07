@@ -2,7 +2,7 @@ import { Injectable, OnInit } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { getDatabase, ref, onValue, set, QueryConstraint } from "firebase/database";
-import { getFirestore, doc, setDoc, getDocs, addDoc, collection, updateDoc, serverTimestamp, query, orderBy, where, getDoc, deleteDoc, DocumentReference, WhereFilterOp,  onSnapshot, QuerySnapshot } from "firebase/firestore"
+import { getFirestore, doc, setDoc, getDocs, addDoc, collection, updateDoc, serverTimestamp, query, orderBy, where, startAt, endAt, getDoc, deleteDoc, DocumentReference, WhereFilterOp,  onSnapshot, QuerySnapshot } from "firebase/firestore"
 
 import { getDownloadURL, getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
 
@@ -208,7 +208,32 @@ export class FirebaseService{
 
     if(queryFilter) 
     { 
-      q = query(collectionRef, where(queryFilter.attributeName, "==", queryFilter.equalsValue)); 
+      q = query(collectionRef, orderBy("datehour", "desc"), where(queryFilter.attributeName, "==", queryFilter.equalsValue)); 
+    }
+    
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const docsContent:any[] = [];
+
+      querySnapshot.forEach((doc) => {
+        docsContent.push({...doc.data(), id: doc.id});
+      });
+      console.log("novo observavel lançado: ", docsContent)
+      this.documentsSubject$.next(docsContent);
+    }, (error) => {
+      this.documentsSubject$.error(error);
+    });
+
+    return this.documentsSubject$;
+  }
+
+  getSnapshotDocumentsPaginated(collectionName: string,  page: number, queryFilter?: QueryFilter){
+    const collectionRef = collection(this.firestoreDB, collectionName);
+
+    let q = query(collectionRef, orderBy("datehour", "desc"), startAt(page), endAt(page + 10));
+
+    if(queryFilter) 
+    { 
+      q = query(collectionRef, orderBy("datehour", "desc"), where(queryFilter.attributeName, "==", queryFilter.equalsValue)); 
     }
     
     const unsubscribe = onSnapshot(q, (querySnapshot) => {

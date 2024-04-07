@@ -6,6 +6,7 @@ import { PostService } from 'src/app/services/post.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { tap, map, Observable, switchMap } from 'rxjs';
 import { AsideContentComponent } from '../../aside-content/aside-content.component';
+import { QueryFilter } from 'src/app/model/queryFilter';
 
 
 @Component({
@@ -18,6 +19,10 @@ export class HomePageComponent implements OnInit, OnDestroy{
   @ViewChild('asideContentLG', {static:false}) asideContentLG!: AsideContentComponent;
   @ViewChild('asideContentSM', {static:false}) asideContentSM!: AsideContentComponent;
 
+  // Variaveis de paginacao
+  currentPage: number = 1;
+  isVerified: boolean = true;
+
   get search(){
     if(this.asideContentLG.searchForm.controls.search.value){
       return this.asideContentLG.searchForm.controls.search.value;
@@ -28,7 +33,7 @@ export class HomePageComponent implements OnInit, OnDestroy{
     return '';
   }
 
-  constructor(public postService:PostService , private router: Router, private activatedRoute: ActivatedRoute)
+  constructor(public postService:PostService , private router: Router, private route: ActivatedRoute)
   {
     // this.activatedRoute.queryParams.subscribe((result)=>{
     //   this.searchParam = result['tag']
@@ -37,7 +42,9 @@ export class HomePageComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    this.postService.postSubscriptions = this.postService.getPostsObservable()
+    this.getQueryParams()
+
+    this.postService.postSubscriptions = this.postService.getPostsObservable(new QueryFilter("isVerified", this.isVerified))
     .pipe(map(this.postService.mapPosts))
     .subscribe(
         {
@@ -57,7 +64,16 @@ export class HomePageComponent implements OnInit, OnDestroy{
       this.postService.postSubscriptions.unsubscribe();
   }
 
-  buildPreview(array:Array<string>):string{
+  getQueryParams(): void{
+      this.route.queryParams.subscribe((params)=>{
+        this.currentPage = params["page"]? params["page"] : this.currentPage;
+        this.isVerified = params["isverified"]? params["isverified"] : this.isVerified;
+        console.log("Page:", params["page"])
+        console.log("Verificado:", params["isverified"])
+      })
+  }
+
+  buildDetailsPreview(array:Array<string>):string{
     return array.reduce((pre:string,current:string)=>pre+' '+current)
   }
 

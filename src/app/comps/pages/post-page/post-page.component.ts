@@ -54,7 +54,7 @@ export class PostPageComponent implements OnInit{
   }
 
   getPost(postId:string){
-    // this.post = this.postShared.getSharedPost();
+    
     //Transforma o timestamp do formato firestore(presente no atributo datehour) para o datetime no formato string entendivel
     this.firebase.getDocument('Posts', postId).then((res)=>{if(res){this.post = {...res , datehour: new Date(res['datehour']['seconds']*1000).toLocaleString()}}});
   }
