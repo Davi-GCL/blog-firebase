@@ -19,8 +19,6 @@ export class HomePageComponent implements OnInit, OnDestroy{
   @ViewChild('asideContentLG', {static:false}) asideContentLG!: AsideContentComponent;
   @ViewChild('asideContentSM', {static:false}) asideContentSM!: AsideContentComponent;
 
-  // Variaveis de paginacao
-  currentPage: number = 1;
   isVerified: boolean = true;
 
   get search(){
@@ -66,10 +64,7 @@ export class HomePageComponent implements OnInit, OnDestroy{
 
   getQueryParams(): void{
       this.route.queryParams.subscribe((params)=>{
-        this.currentPage = params["page"]? params["page"] : this.currentPage;
         this.isVerified = params["isverified"]? params["isverified"] : this.isVerified;
-        console.log("Page:", params["page"])
-        console.log("Verificado:", params["isverified"])
       })
   }
 

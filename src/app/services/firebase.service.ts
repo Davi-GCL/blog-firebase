@@ -226,31 +226,6 @@ export class FirebaseService{
     return this.documentsSubject$;
   }
 
-  getSnapshotDocumentsPaginated(collectionName: string,  page: number, queryFilter?: QueryFilter){
-    const collectionRef = collection(this.firestoreDB, collectionName);
-
-    let q = query(collectionRef, orderBy("datehour", "desc"), startAt(page), endAt(page + 10));
-
-    if(queryFilter) 
-    { 
-      q = query(collectionRef, orderBy("datehour", "desc"), where(queryFilter.attributeName, "==", queryFilter.equalsValue)); 
-    }
-    
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const docsContent:any[] = [];
-
-      querySnapshot.forEach((doc) => {
-        docsContent.push({...doc.data(), id: doc.id});
-      });
-      console.log("novo observavel lançado: ", docsContent)
-      this.documentsSubject$.next(docsContent);
-    }, (error) => {
-      this.documentsSubject$.error(error);
-    });
-
-    return this.documentsSubject$;
-  }
-
   async getDocuments(collectionName:string){
     const collectionRef = collection(this.firestoreDB, collectionName);
 
