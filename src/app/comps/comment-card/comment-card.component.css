@@ -8,3 +8,7 @@
     box-sizing: border-box;
     width: 100%;
 }
+
+.dropdown-menu{
+    height: fit-content;
+}

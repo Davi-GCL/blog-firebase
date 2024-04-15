@@ -3,8 +3,8 @@
         <!-- <img src={{post.bannerUrl}} alt=""> -->
         <div class="card-header d-flex justify-content-between">
             <p class="fw-medium m-0 ms-2"><a [routerLink]="['/']" >posts</a> / <a href="">{{post.tag}}</a> / ...</p>
-            <div>
-                <small class="me-2 text-body-secondary">{{post.datehour}}</small>
+            <div class="d-flex no-wrap">
+                <small class="me-2 text-body-secondary text-end">{{post.datehour}}</small>
                  <a [routerLink]="['/edit-post',this.id]" *ngIf="isAuthor()"><i class="bi bi-pencil-square text-primary"></i></a>
                  <span class="ms-2" role="button" *ngIf="isAuthor()" (click)="deletePost()"><i class="bi bi-trash3 text-danger"></i></span>
             </div>

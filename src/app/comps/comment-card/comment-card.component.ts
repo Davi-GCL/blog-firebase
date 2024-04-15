@@ -8,4 +8,10 @@ import { Comment } from 'src/app/model/comment';
 })
 export class CommentCardComponent {
   @Input() commentData!:Comment;
+
+  showOptionsMenu: boolean = false;
+
+  toggleOptionsMenu(): void {
+    this.showOptionsMenu = !this.showOptionsMenu;
+  }
 }
