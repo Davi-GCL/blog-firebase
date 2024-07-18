@@ -26,6 +26,7 @@ import { LoadingMessageComponent } from './comps/loading-message/loading-message
 import { AsideContentComponent } from './comps/aside-content/aside-content.component';
 
 import { environment } from '../environments/environment';
+import { ThreeDotsMenuComponent } from './comps/three-dots-menu/three-dots-menu.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { environment } from '../environments/environment';
     PostCardComponent,
     LikeButtonComponent,
     LoadingMessageComponent,
-    AsideContentComponent
+    AsideContentComponent,
+    ThreeDotsMenuComponent
   ],
   imports: [
     BrowserModule,

@@ -2,6 +2,9 @@ import { Injectable, OnInit } from '@angular/core';
 import { FirebaseService } from './firebase.service';
 import { Comment as MyComment } from 'src/app/model/comment';
 import { IAuthor } from '../model/iauthor';
+import { Author } from '../model/author';
+import { AlertService } from './alert.service';
+
 
 
 @Injectable({
@@ -11,7 +14,9 @@ export class RatingService implements OnInit{
 
   public user!: IAuthor;
 
-  constructor(private firebase:FirebaseService) 
+  private readonly _commentsPath = "Posts/{postId}/coments";
+
+  constructor(private firebase:FirebaseService, private alertService: AlertService) 
   {
     this.firebase.user$.subscribe((value) => { this.user = value ; console.log("Usuario reconhecido em rating service")})
   }
@@ -42,6 +47,27 @@ export class RatingService implements OnInit{
 
     // this.router.navigate([this.router.url]);
 
+  }
+
+  async deleteCommentAsync(postId: string, commentId:string, commentAuthor: IAuthor) : Promise<any>
+  {
+    let isAuthor = this.firebase.userInfoEquals(commentAuthor.userId);
+
+    if(!isAuthor){
+      this.alertService.add("Ação não autorizada", "Somente o autor do post ou do comentário podem deletar o comentário!", "danger");
+      throw new Error("Somente o autor pode deletar o comentario");
+    }
+
+    let commentCollection = this._commentsPath.replace("{postId}", postId);
+
+    let foundComment = await this.firebase.getDocument(commentCollection, commentId);
+
+    if(!foundComment){
+      this.alertService.add("", "Comentário não encontrado", "danger");
+      throw new Error("Comentário não encontrado");
+    }
+
+    return this.firebase.deleteDocument(commentCollection, commentId);
   }
  
   updatePostLikes(postId:string, currentLikes:Array<string>):boolean{

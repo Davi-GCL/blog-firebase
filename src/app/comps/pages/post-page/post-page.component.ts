@@ -12,6 +12,7 @@ import { RatingService } from 'src/app/services/rating.service';
 import { IAuthor } from 'src/app/model/iauthor';
 
 import { environment } from 'src/environments/environment';
+import { EventDTO } from 'src/app/model/eventDTO';
 
 @Component({
   selector: 'app-post-page',
@@ -26,6 +27,8 @@ export class PostPageComponent implements OnInit{
   post:any;
   commentsList: Array<MyComment> = new Array<MyComment>();
   user!:IAuthor;
+
+  isLoading: boolean = false;
 
   formComment: FormGroup = new FormGroup({
     inputComment: new FormControl('', [Validators.required])
@@ -89,11 +92,19 @@ export class PostPageComponent implements OnInit{
     
   }
 
-  isSigned(){
-    return this.user.userId?true:false;
+  isSigned(): boolean{
+    return this.user.userId? true : false;
   }
 
-  isAuthor(){
+  isAuthor(): boolean{
     return this.post.author.userId == this.user.userId;
+  }
+
+  handleUpdateEvent(eventData: Promise<any>): void{
+    this.isLoading = true;
+    eventData.then(
+      () => {this.isLoading = false;},
+      (err) => {console.log(err)}
+    )
   }
 }

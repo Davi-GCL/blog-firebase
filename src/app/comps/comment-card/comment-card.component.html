@@ -1,5 +1,5 @@
 
-    <div class="card comment-card mb-4">
+    <div class="card comment-card mb-4" id={{commentData.id}}>
         <!-- <div class="card-header post-header d-flex align-items-center">
             <img src={{commentData.author.userPhoto}} alt="user photo" class="img-fluid comment-avatar rounded-2">
             <span class='text-start ms-3'>
@@ -12,22 +12,16 @@
             
             <div class='text-start ms-3 w-100'>
                 <span class="d-flex align-items-baseline justify-content-between">
-                    <h5 class="mb-0 pb-1 me-3">{{commentData.author.userName}}</h5>
+                    <h6 class="mb-0 pb-1 me-3">{{commentData.author.userName}}</h6>
                     
-                    <div class="card-header-end">
-                        <small class="text-body-secondary">{{commentData.datehour}}</small>
+                    <div class="card-header-end d-flex">
+                        <div class="pe-1"><small class="text-body-secondary">{{commentData.datehour}}</small></div>
 
-                        <div class="btn-group dropend">
-                            <div class="" (click)="toggleOptionsMenu()" aria-expanded="false">
-                                <i class="bi bi-three-dots-vertical"></i>
-                            </div>
-                            <ul [ngClass]="{'show': showOptionsMenu}" class="dropdown-menu" data-popper-placement="right-end"
-                            style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate3d(-150px, 110px, 0px);">
-                                <li><a class="dropdown-item" href="#">Editar</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Apagar</a></li>
-                            </ul>
-                        </div>
+                        <app-three-dots-menu class="ps-1">
+                            <li class="dropdown-item">Editar</li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li class="dropdown-item" (click)="deleteComment()">Apagar</li>
+                        </app-three-dots-menu>
                     </div>
                 </span>
 
