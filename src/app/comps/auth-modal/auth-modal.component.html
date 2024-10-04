@@ -20,6 +20,8 @@
               formControlName="password">
             </div>
 
+            <a class="mx-auto mb-3 p-0 align-self-start" role="button" (click)="onLogin=false">Não tem cadastro?</a>
+
             <div class="mb-1 d-flex justify-content-center" style="max-width: 233px;" *ngIf="formLogin.controls.email.touched">
               <re-captcha 
               (resolved)="captchaResolved($event)"
@@ -27,7 +29,6 @@
               required ></re-captcha>
             </div>
 
-            <a class="mx-auto mb-3 p-0 align-self-start" role="button" (click)="onLogin=false">Não tem cadastro?</a>
             <button class="btn btn-primary justify-content-end mb-1" (click)="loginEmail()">Login</button>
           </form>
 

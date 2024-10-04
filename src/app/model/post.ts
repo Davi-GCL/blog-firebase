@@ -23,5 +23,6 @@ export class Post {
     author:IAuthor = {userId:'',userName:'',userPhoto:''}
     likes!:Array<string>;
     datehour!:any | string;
-    tag?:any = ''
+    tag?:any = '';
+    isVerified?: boolean = false;
 }
