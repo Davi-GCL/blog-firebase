@@ -1,3 +1,3 @@
 export class EventDTO {
-    constructor(public isCompleted: boolean, public data?: any){}
+    constructor(public status: 'completed' | 'editing' | 'pending', public data?: any){}
 }

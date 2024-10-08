@@ -5,12 +5,10 @@ import { IAuthor } from '../model/iauthor';
 import { Author } from '../model/author';
 import { AlertService } from './alert.service';
 
-
-
 @Injectable({
   providedIn: 'root'
 })
-export class RatingService implements OnInit{
+export class RatingService {
 
   public user!: IAuthor;
 
@@ -19,10 +17,6 @@ export class RatingService implements OnInit{
   constructor(private firebase:FirebaseService, private alertService: AlertService) 
   {
     this.firebase.user$.subscribe((value) => { this.user = value ; console.log("Usuario reconhecido em rating service")})
-  }
-
-  ngOnInit(): void {
-      
   }
 
   async getComments(postId:string): Promise<MyComment[]>{
@@ -47,6 +41,42 @@ export class RatingService implements OnInit{
 
     // this.router.navigate([this.router.url]);
 
+  }
+
+  async updateCommentContent(postId:string, commentId:string, newContent:string){
+    let userId = this.user.userId;
+
+    if(commentId == "") throw new Error("Nao foi possivel achar o id do comentario!")
+    if(newContent == "") throw new Error("Conteudo de comentario invalido!")
+      
+    return await this.firebase.updateDocument(`Posts/${postId}/coments/`, commentId, {text: newContent});
+
+  }
+
+  updateCommentLikes(postId:string, commentId:string, currentLikes:Array<string>):boolean{
+
+    let userId = this.user.userId;
+
+    let userLikeIndex:number = currentLikes.findIndex(x=>x === userId)
+
+    if(userLikeIndex != -1){
+      //Removendo o usuario da lista de likes
+      let updatedLikesList = currentLikes.filter((value:string, i:number) => i != userLikeIndex);
+
+      this.firebase.updateDocument(`Posts/${postId}/coments`, commentId, {likes: updatedLikesList});
+
+      return false;
+    }
+    else{
+      //Adicionando o usuario na lista de likes
+      let updatedLikesList = [...currentLikes, userId];
+
+      this.firebase.updateDocument(`Posts/${postId}/coments`, commentId, {likes: updatedLikesList});
+      
+      return true;
+    }
+    
+    // this.firebase.createDocument(`Posts/${postId}/comments/${commentId}/likes`, new Like(userId));
   }
 
   async deleteCommentAsync(postId: string, commentId:string, commentAuthor: IAuthor) : Promise<any>
@@ -96,31 +126,5 @@ export class RatingService implements OnInit{
 
       return true;
     }
-  }
-
-  updateCommentLikes(postId:string, commentId:string, currentLikes:Array<string>):boolean{
-
-    let userId = this.user.userId;
-
-    let userLikeIndex:number = currentLikes.findIndex(x=>x === userId)
-
-    if(userLikeIndex != -1){
-      //Removendo o usuario da lista de likes
-      let updatedLikesList = currentLikes.filter((value:string, i:number) => i != userLikeIndex);
-
-      this.firebase.updateDocument(`Posts/${postId}/comments`, commentId, {likes: updatedLikesList});
-
-      return false;
-    }
-    else{
-      //Adicionando o usuario na lista de likes
-      let updatedLikesList = [...currentLikes, userId];
-
-      this.firebase.updateDocument(`Posts/${postId}/comments`, commentId, {likes: updatedLikesList});
-      
-      return true;
-    }
-    
-    // this.firebase.createDocument(`Posts/${postId}/comments/${commentId}/likes`, new Like(userId));
   }
 }

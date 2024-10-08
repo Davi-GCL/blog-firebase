@@ -17,8 +17,8 @@
                     <div class="card-header-end d-flex">
                         <div class="pe-1"><small class="text-body-secondary">{{commentData.datehour}}</small></div>
 
-                        <app-three-dots-menu class="ps-1">
-                            <li class="dropdown-item">Editar</li>
+                        <app-three-dots-menu class="ps-1" *ngIf="isAuthor">
+                            <li class="dropdown-item" (click)="editComment()">Editar</li>
                             <li><hr class="dropdown-divider"></li>
                             <li class="dropdown-item" (click)="deleteComment()">Apagar</li>
                         </app-three-dots-menu>
@@ -26,7 +26,11 @@
                 </span>
 
                 <hr class="my-1 py-1">
-                <p class="card-text">{{commentData.text}}</p>
+                <p class="card-text" *ngIf="!onEditMode; else EditCommentTemplate">{{commentData.text}}</p>
+                <ng-template #EditCommentTemplate>
+                    <input type="text" name="edit-comment-content" [(ngModel)]="editCommentContent">
+                    <button (click)="saveContentAtEdition()">Salvar</button>
+                </ng-template>
             </div>
         </div>
         <!-- <div class="card-footer d-flex justify-content-end">
