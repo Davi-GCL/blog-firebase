@@ -23,30 +23,35 @@
     <!-- ------------- Seção dos comentarios ------------ -->
     <div class="container comments d-grid" id="section-comments" >
 
-    <div class=" mb-4 w-100">
-        <h5 class="text-center text-secondary mb-3">Comentários ({{commentsList.length}}):</h5>
+        <div class=" mb-4 w-100">
+            <h5 class="text-center text-secondary mb-3">Comentários ({{commentsList.length}}):</h5>
 
-        <form class="form-comment w-100" [formGroup]="formComment" *ngIf="this.isSigned()">
-            <!-- <label for="inputComment" class="form-label">Escreva um comentário</label> -->
-            <textarea type="text" class="form-control" name="inputComment" placeholder="Escreva seu comentário" formControlName="inputComment" style="height: 87px;width: 100%;"></textarea>
-            
-            <div class="mt-2" *ngIf="formComment.controls['inputComment'].touched">
-                <re-captcha 
-                (resolved)="captchaResolved($event)"
-                siteKey={{siteKey}}
-                required ></re-captcha>
+            <form class="form-comment w-100" [formGroup]="formComment" *ngIf="this.isSigned()">
+                <!-- <label for="inputComment" class="form-label">Escreva um comentário</label> -->
+                <textarea type="text" class="form-control" name="inputComment" placeholder="Escreva seu comentário" formControlName="inputComment" style="height: 87px;width: 100%;"></textarea>
+                
+                <div class="mt-2" *ngIf="formComment.controls['inputComment'].touched">
+                    <re-captcha 
+                    (resolved)="captchaResolved($event)"
+                    siteKey={{siteKey}}
+                    required ></re-captcha>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-2" [disabled]="!captcha" (click)="uploadComment()">Enviar</button>
+            </form>
+
+            <div class="comment-warn" *ngIf="!this.isSigned()">
+                <h5 class="text-center text-danger">Faça login para comentar</h5>
             </div>
-
-            <button type="submit" class="btn btn-primary mt-2" [ngClass]="{'disabled': !captcha}" (click)="uploadComment()">Enviar</button>
-        </form>
-
-        <div class="comment-warn" *ngIf="!this.isSigned()">
-            <h5 class="text-center text-danger">Faça login para comentar</h5>
         </div>
-    </div>
-        <div class="justify-content-center align-items-center">
-            <app-comment-card *ngFor="let comment of commentsList" [commentData]="comment"></app-comment-card>
+        <div class="justify-content-center align-items-center" *ngIf="id != null; else loading">
+            <app-comment-card *ngFor="let comment of commentsList" [commentData]="comment" [postId]="id" (onUpdate)="handleUpdateEvent($event)"></app-comment-card>
         </div>
+        <ng-template #loading>
+            <app-loading-message variant="spinner-grow" colorClass="text-primary">
+                <h5 class="loading-message text-primary">Carregando publicações...</h5>
+            </app-loading-message>
+          </ng-template>
     </div>
 
 

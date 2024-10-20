@@ -1,0 +1,9 @@
+<div class="btn-group dropend">
+    <div class="" (click)="toggleOptionsMenu()" aria-expanded="false">
+        <i class="bi bi-three-dots-vertical"></i>
+    </div>
+    <ul [ngClass]="{'show': showOptionsMenu}" class="dropdown-menu" data-popper-placement="right-end"
+    style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate3d(-150px, 110px, 0px);">
+        <ng-content select="li"></ng-content>
+    </ul>
+</div>

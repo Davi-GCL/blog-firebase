@@ -171,6 +171,10 @@ export class FirebaseService{
     });
   }
 
+  userInfoEquals(id:string): boolean {
+    return this.auth.currentUser?.uid == id;
+  }
+
   // sendToRealtimeDatabase() { }
 
   // activateUpdate(setState:any) {

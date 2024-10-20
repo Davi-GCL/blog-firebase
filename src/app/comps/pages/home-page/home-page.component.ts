@@ -71,11 +71,11 @@ export class HomePageComponent implements OnInit, OnDestroy{
   getQueryParams(): void{
     this.route.queryParams.subscribe((params)=>{
       if(params["unverified"]) this.isVerified$.next(params["unverified"] == "true"? false : true);
+
     })
   }
 
   buildDetailsPreview(array:Array<string>):string{
     return array.reduce((pre:string,current:string)=>pre+' '+current)
   }
-
 }

@@ -113,7 +113,8 @@ export class FormCreatePostComponent implements OnInit{
           author: {userId, userName, userPhoto},
           likes: [],
           datehour: new Date(),
-          tag: this.formPost.value.tag
+          tag: this.formPost.value.tag,
+          isVerified: false
         }
         
         let postId = (await this.firebase.createDocument("Posts",newPost)).id;
