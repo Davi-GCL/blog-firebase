@@ -12,3 +12,8 @@
 .dropdown-menu{
     height: fit-content;
 }
+
+.edit-text-area{
+    height: 87px;
+    width: 100%;
+}

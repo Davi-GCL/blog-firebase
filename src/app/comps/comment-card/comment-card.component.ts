@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { from } from 'rxjs';
 import { Comment } from 'src/app/model/comment';
+import { EventDTO } from 'src/app/model/eventDTO';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { RatingService } from 'src/app/services/rating.service';
 
@@ -16,7 +18,7 @@ export class CommentCardComponent implements OnInit{
 
   @Input() commentData!: Comment;
   @Input() postId!: string;
-  @Output() onUpdate = new EventEmitter<any>();
+  @Output() onUpdate = new EventEmitter<any>(true);
 
   constructor(private route: ActivatedRoute, private ratingService: RatingService, private firebaseService: FirebaseService) {}
 
@@ -28,13 +30,12 @@ export class CommentCardComponent implements OnInit{
     if (!this.onEditMode) return;
     
     if(this.commentData.id)
-      this.ratingService.updateCommentContent(this.postId ,this.commentData.id, this.editCommentContent)
+      this.ratingService.updateCommentContent(this.postId ,this.commentData.id, this.editCommentContent);
 
-    console.log("Postagem: ", this.postId, "Comentario: ", this.commentData.id, this.editCommentContent)
-    
+    console.log("Postagem: ", this.postId, "Comentario: ", this.commentData.id, this.editCommentContent);
   }
 
-  deleteComment() : any
+  async deleteComment()
   {
     let postId = this.route.snapshot.paramMap.get('id');
     
@@ -42,10 +43,11 @@ export class CommentCardComponent implements OnInit{
       throw new Error("ID do post nao encontrado");
     
     if(this.commentData.id){
-      // this.onUpdate.emit(new EventDTO(false));
-      this.onUpdate.emit(
-        this.ratingService.deleteCommentAsync(postId, this.commentData.id, this.commentData.author)
-      );
+      this.onUpdate.next('0')
+      from(this.ratingService.deleteCommentAsync(postId, this.commentData.id, this.commentData.author))
+        .subscribe({next: (v) => {this.onUpdate.next('1')}})
+
+      
     }
   }
 

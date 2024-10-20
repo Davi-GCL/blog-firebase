@@ -37,14 +37,14 @@
                     required ></re-captcha>
                 </div>
 
-                <button type="submit" class="btn btn-primary mt-2" [ngClass]="{'disabled': !captcha}" (click)="uploadComment()">Enviar</button>
+                <button type="submit" class="btn btn-primary mt-2" [disabled]="!captcha" (click)="uploadComment()">Enviar</button>
             </form>
 
             <div class="comment-warn" *ngIf="!this.isSigned()">
                 <h5 class="text-center text-danger">Faça login para comentar</h5>
             </div>
         </div>
-        <div class="justify-content-center align-items-center" *ngIf="isLoading == false &&  id != null; else loading">
+        <div class="justify-content-center align-items-center" *ngIf="id != null; else loading">
             <app-comment-card *ngFor="let comment of commentsList" [commentData]="comment" [postId]="id" (onUpdate)="handleUpdateEvent($event)"></app-comment-card>
         </div>
         <ng-template #loading>

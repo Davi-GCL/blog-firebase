@@ -27,9 +27,14 @@
 
                 <hr class="my-1 py-1">
                 <p class="card-text" *ngIf="!onEditMode; else EditCommentTemplate">{{commentData.text}}</p>
+                
                 <ng-template #EditCommentTemplate>
-                    <input type="text" name="edit-comment-content" [(ngModel)]="editCommentContent">
-                    <button (click)="saveContentAtEdition()">Salvar</button>
+                    <textarea type="text" class="form-control edit-text-area" name="inputComment" placeholder="Escreva seu comentário" name="edit-comment-content" 
+                    [(ngModel)]="editCommentContent"></textarea>
+
+                    <button class="btn btn-primary mt-2 float-end" 
+                    [disabled]="this.editCommentContent == this.commentData.text"
+                    (click)="saveContentAtEdition()">Salvar</button>
                 </ng-template>
             </div>
         </div>
