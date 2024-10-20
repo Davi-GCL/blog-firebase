@@ -3,6 +3,7 @@ import { Post } from '../model/post';
 import { FirebaseService } from './firebase.service';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
+import { QueryFilter } from '../model/queryFilter';
 
 @Injectable({
   providedIn: 'root'
@@ -40,23 +41,11 @@ export class PostService implements OnDestroy{
     return postsArray;
   }
 
-  getPostsObservable():Observable<any[]>
+  getPostsObservable(queryFilter?: QueryFilter):Observable<any[]>
   {
-    // this.postSubscriptions = this.firebase.getSnapshotDocuments("Posts").subscribe(
-    //   {
-    //     next: (result) => {
-    //       this.postList = this.mapPosts(result);
-    //       console.log(result);
-    //     },
-    //     error: (err)=>console.log(err)
-    //   }
-    // )
+    this.postsList$ = this.firebase.getSnapshotDocuments("Posts", queryFilter);
 
-    this.postsList$ = this.firebase.getSnapshotDocuments("Posts");
-
-    return this.postsList$;
-
-    // return this.postList;  
+    return this.postsList$;  
   }
 
   listTrendPostsByLikes(postList:Post[])

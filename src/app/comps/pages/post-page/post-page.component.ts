@@ -12,6 +12,8 @@ import { RatingService } from 'src/app/services/rating.service';
 import { IAuthor } from 'src/app/model/iauthor';
 
 import { environment } from 'src/environments/environment';
+import { EventDTO } from 'src/app/model/eventDTO';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-post-page',
@@ -26,6 +28,8 @@ export class PostPageComponent implements OnInit{
   post:any;
   commentsList: Array<MyComment> = new Array<MyComment>();
   user!:IAuthor;
+
+  isLoading: boolean = false;
 
   formComment: FormGroup = new FormGroup({
     inputComment: new FormControl('', [Validators.required])
@@ -54,7 +58,7 @@ export class PostPageComponent implements OnInit{
   }
 
   getPost(postId:string){
-    // this.post = this.postShared.getSharedPost();
+    
     //Transforma o timestamp do formato firestore(presente no atributo datehour) para o datetime no formato string entendivel
     this.firebase.getDocument('Posts', postId).then((res)=>{if(res){this.post = {...res , datehour: new Date(res['datehour']['seconds']*1000).toLocaleString()}}});
   }
@@ -85,15 +89,37 @@ export class PostPageComponent implements OnInit{
 
     if(!this.commentary || this.commentary == ' ') throw new Error("Commentario invalido! Entrada vazia");
 
-    this.rateService.uploadComment(this.id, this.commentary).then((result)=>this.commentsList = result);
+    this.rateService.uploadComment(this.id, this.commentary).then((result)=>{
+      this.formComment.reset();
+      this.commentsList = result;
+    });
     
   }
 
-  isSigned(){
-    return this.user.userId?true:false;
+  isSigned(): boolean{
+    return this.user.userId? true : false;
   }
 
-  isAuthor(){
+  isAuthor(): boolean{
     return this.post.author.userId == this.user.userId;
+  }
+
+  handleUpdateEvent(eventData: any): void{
+    console.log(eventData)
+
+      if(eventData == '0')
+        this.isLoading = true;
+
+      if(eventData == '1')
+        this.rateService.getComments(this.id!)
+          .then(res => {
+            this.commentsList = res;
+            this.isLoading = false;
+          })
+          .finally(() => this.isLoading = false)
+
+
+    
+
   }
 }

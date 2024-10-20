@@ -4,8 +4,9 @@ import { FirebaseService } from 'src/app/services/firebase.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PostService } from 'src/app/services/post.service';
 import { FormControl, FormGroup } from '@angular/forms';
-import { tap, map, Observable, switchMap } from 'rxjs';
+import { tap, map, Observable, switchMap, BehaviorSubject, Subscription } from 'rxjs';
 import { AsideContentComponent } from '../../aside-content/aside-content.component';
+import { QueryFilter } from 'src/app/model/queryFilter';
 
 
 @Component({
@@ -18,6 +19,10 @@ export class HomePageComponent implements OnInit, OnDestroy{
   @ViewChild('asideContentLG', {static:false}) asideContentLG!: AsideContentComponent;
   @ViewChild('asideContentSM', {static:false}) asideContentSM!: AsideContentComponent;
 
+  isVerified$: BehaviorSubject<boolean> = new BehaviorSubject(true);
+
+  paramsSubscription!: Subscription;
+
   get search(){
     if(this.asideContentLG.searchForm.controls.search.value){
       return this.asideContentLG.searchForm.controls.search.value;
@@ -28,7 +33,7 @@ export class HomePageComponent implements OnInit, OnDestroy{
     return '';
   }
 
-  constructor(public postService:PostService , private router: Router, private activatedRoute: ActivatedRoute)
+  constructor(public postService:PostService , private router: Router, private route: ActivatedRoute)
   {
     // this.activatedRoute.queryParams.subscribe((result)=>{
     //   this.searchParam = result['tag']
@@ -37,28 +42,40 @@ export class HomePageComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    this.postService.postSubscriptions = this.postService.getPostsObservable()
-    .pipe(map(this.postService.mapPosts))
-    .subscribe(
-        {
-          next: (result) => {
-            this.postService.postList = result;
+    this.paramsSubscription = this.isVerified$.subscribe((value)=>
+    {
+      this.postService.postSubscriptions = this.postService.getPostsObservable(new QueryFilter("isVerified", value))
+      .pipe(map(this.postService.mapPosts))
+      .subscribe(
+          {
+            next: (result) => {
+              this.postService.postList = result;
 
-            this.postService.listTrendPostsByLikes(this.postService.postList);
-            
-            console.log(this.postService.trendPostsList);
-          },
-          error: (err)=>console.log(err)
-        }
-      );
+              this.postService.listTrendPostsByLikes(this.postService.postList);
+              
+              console.log(this.postService.trendPostsList);
+            },
+            error: (err)=>console.log(err)
+          }
+        );
+    })
+
+    this.getQueryParams()
   }
 
   ngOnDestroy(): void {
       this.postService.postSubscriptions.unsubscribe();
+      this.paramsSubscription.unsubscribe();
   }
 
-  buildPreview(array:Array<string>):string{
+  getQueryParams(): void{
+    this.route.queryParams.subscribe((params)=>{
+      if(params["unverified"]) this.isVerified$.next(params["unverified"] == "true"? false : true);
+
+    })
+  }
+
+  buildDetailsPreview(array:Array<string>):string{
     return array.reduce((pre:string,current:string)=>pre+' '+current)
   }
-
 }

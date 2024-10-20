@@ -14,3 +14,7 @@
 .publish-date{
     font-size: 12px !important;
 }
+
+.cursor-pointer:hover{
+    cursor: pointer;
+}

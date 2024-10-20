@@ -2,37 +2,6 @@
   <div class="row g-5">
   
     <div class="posts align-items-start col-md-8">
-
-        <!-- <div class="card mb-3" style="max-width: 540px;" *ngFor="let post of postList" (click)="openPost(post.id)" id="post.id">
-            <div class="row g-0">           
-              <div class="col-md-8">
-                <div class="card-header d-flex align-items-center">
-                  <img src={{post.author.userPhoto}}  class="rounded-2" style="height: 2rem;">
-                  <h6 class="p-0 m-0">{{post.author.userName}}</h6>
-                </div> -->
-                <!-- <div class="card-body" style="padding-bottom: 0px;">
-                  <h5 class="card-title">{{post.title}}</h5> -->
-                  <!-- <p class="card-text">{{buildPreview(post.text.split(' ').slice(0,10))}} ...</p> -->
-                  <!-- <hr class="my-2 p-0"> -->
-                  <!-- <p class="card-text">{{post.text.slice(0,80)+'...'}}</p>
-                  <div class="d-flex justify-content-end" style="margin-top: 9%;">
-                    <img src={{post.author.userPhoto}}  class="rounded-2 me-2" style="height: 2rem;">
-                    <span>
-                      <h6 class="p-0 m-0">{{post.author.userName}}</h6>
-                    <small class="text-body-secondary fs-6 publish-date">{{post.datehour}}</small>
-                    </span>
-                  </div> -->
-                  <!-- <p class="card-text"><small class="text-body-secondary">Publicado em {{post.datehour}}</small></p> -->
-                <!-- </div>
-              </div>
-              <div class="col-md-4">
-                <img src={{post.thumbnailUrl}} class="img-fluid rounded-end" alt="Post image">
-              </div>
-            </div>
-          </div> -->
-
-          <!-- <hr> -->
-
       <ng-container *ngIf="postService.postsList$ | async; else loading">
         <app-post-card *ngFor="let post of postService.postList | filter:search" [postContent]="post"></app-post-card>  
       </ng-container>

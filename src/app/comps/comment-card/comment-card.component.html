@@ -1,5 +1,5 @@
 
-    <div class="card comment-card mb-4">
+    <div class="card comment-card mb-4" id={{commentData.id}}>
         <!-- <div class="card-header post-header d-flex align-items-center">
             <img src={{commentData.author.userPhoto}} alt="user photo" class="img-fluid comment-avatar rounded-2">
             <span class='text-start ms-3'>
@@ -9,18 +9,37 @@
         </div> -->
         <div class="card-body d-flex align-items-start">
             <img src={{commentData.author.userPhoto}} alt="user photo" class="img-fluid comment-avatar rounded-2">
+            
             <div class='text-start ms-3 w-100'>
                 <span class="d-flex align-items-baseline justify-content-between">
-                    <h5 class="mb-0 pb-1 me-3">{{commentData.author.userName}}</h5>
-                    <small class="text-body-secondary">{{commentData.datehour}}</small>
+                    <h6 class="mb-0 pb-1 me-3">{{commentData.author.userName}}</h6>
+                    
+                    <div class="card-header-end d-flex">
+                        <div class="pe-1"><small class="text-body-secondary">{{commentData.datehour}}</small></div>
+
+                        <app-three-dots-menu class="ps-1" *ngIf="isAuthor">
+                            <li class="dropdown-item" (click)="editComment()">Editar</li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li class="dropdown-item" (click)="deleteComment()">Apagar</li>
+                        </app-three-dots-menu>
+                    </div>
                 </span>
+
                 <hr class="my-1 py-1">
-                <p class="card-text">{{commentData.text}}</p>
+                <p class="card-text" *ngIf="!onEditMode; else EditCommentTemplate">{{commentData.text}}</p>
+                
+                <ng-template #EditCommentTemplate>
+                    <textarea type="text" class="form-control edit-text-area" name="inputComment" placeholder="Escreva seu comentário" name="edit-comment-content" 
+                    [(ngModel)]="editCommentContent"></textarea>
+
+                    <button class="btn btn-primary mt-2 float-end" 
+                    [disabled]="this.editCommentContent == this.commentData.text"
+                    (click)="saveContentAtEdition()">Salvar</button>
+                </ng-template>
             </div>
         </div>
         <!-- <div class="card-footer d-flex justify-content-end">
             <p class="card-text align-self-end"><small class="text-body-secondary">{{commentData.datehour}}</small></p>
         </div> -->
-        
     </div>
 

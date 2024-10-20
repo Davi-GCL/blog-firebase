@@ -1,7 +1,14 @@
 
-<form class="input-box mb-4" [formGroup]="searchForm">
-  <input type="text" class="form-control" formControlName="search" name="search" placeholder='"blogfirebase" ou "texto: Angular"'>
-  <i class="bi bi-search"></i>                    
+<form class="mb-3" [formGroup]="searchForm">
+  <div class="input-box mb-2">
+    <input type="text" class="form-control" formControlName="search" name="search" placeholder='"blogfirebase" ou "texto: Angular"'>
+    <i class="bi bi-search"></i>
+  </div>
+
+  <div class="form-check form-check" title="Ative para listar postagens que não foram verificadas pela nossa equipe">
+    <input class="form-check-input cursor-pointer" type="checkbox" id="flexSwitchCheck" formControlName="checkVerifiedFilter" name="checkVerifiedFilter">
+    <label class="form-check-label cursor-pointer" for="flexSwitchCheck">Exibir posts não verificados</label>
+  </div>
 </form>
 
 <div class="p-4 mb-3 bg-body-tertiary rounded">
@@ -19,8 +26,8 @@
   <h4 class="text-body-secondary">Posts em alta</h4>
   <ul class="list-unstyled" *ngIf="postService.postsList$ | async">
     <li *ngFor="let tPost of postService.trendPostsList | slice:0:4">
-      <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" (click)="postService.openPost(tPost.id)">
-        <img src={{tPost.thumbnailUrl}} alt="" height="96">
+      <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top cursor-pointer" (click)="postService.openPost(tPost.id)">
+        <img class="trends-thumbnail img-fluid img-thumbnail" src={{tPost.thumbnailUrl}} style="max-width: 96px;">
         <div class="col-lg-8" style="max-width: 100%;">
           <h6 class="mb-0">{{tPost.title}}</h6>
           <p class="text-truncate m-0">{{tPost.text}}</p>
